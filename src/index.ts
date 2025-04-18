@@ -1,6 +1,6 @@
-import { readFile } from "node:fs/promises";
-import { Input } from "./types.js";
 import { exit } from "node:process";
+import { type Input, readInput } from "./io.js";
+import { Sim } from "./sim.js";
 
 // 4 because 1st is node, 2nd is index.ts
 if (process.argv.length != 4) {
@@ -11,20 +11,22 @@ if (process.argv.length != 4) {
 const inputFileName = process.argv[2];
 const outputFileName = process.argv[3];
 
-let inputFile: Buffer<ArrayBufferLike>;
-try {
-    inputFile = await readFile(inputFileName);
-} catch {
-    console.error(`Failed to open input file '${inputFileName}'`);
-    exit(1);
-}
-
 let input: Input;
 try {
-    input = JSON.parse(inputFile.toString()) as Input;
-} catch {
-    console.error(`Failed to parse input file '${inputFileName}'`);
+    input = await readInput(inputFileName);
+} catch (e) {
+    console.error(`Error reading input file: "${e}"`);
     exit(1);
 }
 
-console.log(input);
+const sim = new Sim(0.6, 5, 10);
+for (const command of input.commands) {
+    switch (command.type) {
+        case "addVehicle":
+            sim.addVehicle(command.vehicleId, command.startRoad, command.endRoad);
+            break;
+        case "step":
+            // TODO: step
+            break;
+    }
+}
