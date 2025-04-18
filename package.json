@@ -1,0 +1,19 @@
+{
+    "name": "traffic-control-system",
+    "version": "1.0.0",
+    "description": "",
+    "homepage": "https://github.com/mwojtyna/traffic-control-system#readme",
+    "author": "Mateusz Wojtyna",
+    "type": "module",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node .",
+        "dev": "tsx ./src/index.ts",
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "@types/node": "^22.14.1",
+        "tsx": "^4.19.3",
+        "typescript": "^5.8.3"
+    }
+}
