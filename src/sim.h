@@ -1,0 +1,2 @@
+#define SIM_ADDVEHICLE "ADD_VEHICLE"
+#define SIM_STEP "STEP"
