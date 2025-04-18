@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.16)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(traffic-control-system VERSION 0.1.0 LANGUAGES C)
+file(GLOB SOURCE_FILES ./src/*.c)
+include_directories(./src)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_compile_options(-Wall -Wextra -Wpedantic)
