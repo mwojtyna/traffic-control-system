@@ -1,5 +1,5 @@
 import { exit } from "node:process";
-import { type Input, readInput } from "./io.js";
+import { type Input, Output, readInput, writeOutput } from "./io.js";
 import { Sim } from "./sim.js";
 
 // 4 because 1st is node, 2nd is index.ts
@@ -11,6 +11,7 @@ if (process.argv.length != 4) {
 const inputFileName = process.argv[2];
 const outputFileName = process.argv[3];
 
+// Read input
 let input: Input;
 try {
     input = await readInput(inputFileName);
@@ -19,14 +20,26 @@ try {
     exit(1);
 }
 
-const sim = new Sim(0.6, 5, 10);
+// Simulate
+const output: Output = { stepStatuses: [] };
+const sim = new Sim(2, 1, 10);
+
 for (const command of input.commands) {
     switch (command.type) {
         case "addVehicle":
             sim.addVehicle(command.vehicleId, command.startRoad, command.endRoad);
             break;
         case "step":
-            // TODO: step
+            const leftVehicles = sim.step();
+            output.stepStatuses.push({ leftVehicles: leftVehicles.map((v) => v.id) });
             break;
     }
+}
+
+// Write output
+try {
+    await writeOutput(outputFileName, output);
+} catch (e) {
+    console.error(`Error writing to output file: "${e}"`);
+    exit(1);
 }

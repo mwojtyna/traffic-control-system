@@ -2,7 +2,7 @@ import { Road } from "./io.js";
 
 export type Vehicle = {
     id: string;
-    destination: Road;
+    endRoad: Road;
     next: Vehicle | null;
 };
 
@@ -17,10 +17,10 @@ export class Queue {
         this.count = 0;
     }
 
-    enqueue(id: string, destination: Road): void {
+    enqueue(id: string, endRoad: Road): void {
         const v: Vehicle = {
             id: id,
-            destination,
+            endRoad: endRoad,
             next: null,
         };
 
@@ -48,5 +48,9 @@ export class Queue {
         this.count--;
 
         return v;
+    }
+
+    getCount(): number {
+        return this.count;
     }
 }
