@@ -2,7 +2,7 @@ import { open, readFile } from "node:fs/promises";
 
 export type Road = "north" | "east" | "south" | "west";
 
-export type Command =
+type Command =
     | {
           type: "addVehicle";
           vehicleId: string;
@@ -25,7 +25,7 @@ export type Output = {
     stepStatuses: StepStatus[];
 };
 
-export type StepStatus = {
+type StepStatus = {
     leftVehicles: string[];
 };
 

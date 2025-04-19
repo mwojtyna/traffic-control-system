@@ -23,7 +23,18 @@ log("input", input);
 
 // Simulate
 const output: Output = { stepStatuses: [] };
-const sim = new Sim(2, 1, 10);
+const sim = new Sim({
+    ns: {
+        sr: { greenMin: 2, greenMax: 5 },
+        l: { greenMin: 0, greenMax: 3 },
+        ratio: 2,
+    },
+    ew: {
+        sr: { greenMin: 2, greenMax: 5 },
+        l: { greenMin: 0, greenMax: 3 },
+        ratio: 2,
+    },
+});
 
 for (const command of input.commands) {
     switch (command.type) {
