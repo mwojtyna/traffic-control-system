@@ -5,6 +5,7 @@ export type Light = "red" | "yellow" | "red-yellow" | "green";
 export type LightState = { ns: Light; ew: Light };
 
 export type State = {
+    name: string;
     output: LightState;
     nextStateIndex: {
         p1: number; // timer >= greenMin && carsEW/carsNS >= ratio          (min time elapsed and too many cars waiting on EW, changing EW to green)
@@ -19,20 +20,22 @@ export type State = {
     };
 };
 
+// // prettier-ignore
 // const states: State[] = [
-//     { output: { ns: "green", ew: "red" }, nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 } }, // S0
-//     { output: { ns: "yellow", ew: "red" }, nextStateIndex: { p1: 2, p2: 2, p3: 2, e: 2 } }, // S1
-//     { output: { ns: "red", ew: "red" }, nextStateIndex: { p1: 3, p2: 3, p3: 3, e: 3 } }, // S2
-//     { output: { ns: "red", ew: "red-yellow" }, nextStateIndex: { p1: 4, p2: 4, p3: 4, e: 4 } }, // S3
-//     { output: { ns: "red", ew: "green" }, nextStateIndex: { p1: 4, p2: 5, p3: 5, e: 4 } }, // S4
-//     { output: { ns: "red", ew: "yellow" }, nextStateIndex: { p1: 6, p2: 6, p3: 6, e: 6 } }, // S5
-//     { output: { ns: "red", ew: "red" }, nextStateIndex: { p1: 7, p2: 7, p3: 7, e: 7 } }, // S6
-//     { output: { ns: "red-yellow", ew: "red" }, nextStateIndex: { p1: 0, p2: 0, p3: 0, e: 0 } }, // S7
+//     { name: "S0", output: { ns: "green", ew: "red" }, nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 } },
+//     { name: "S1", output: { ns: "yellow", ew: "red" }, nextStateIndex: { p1: 2, p2: 2, p3: 2, e: 2 } },
+//     { name: "S2", output: { ns: "red", ew: "red" }, nextStateIndex: { p1: 3, p2: 3, p3: 3, e: 3 } },
+//     { name: "S3", output: { ns: "red", ew: "red-yellow" }, nextStateIndex: { p1: 4, p2: 4, p3: 4, e: 4 } },
+//     { name: "S4", output: { ns: "red", ew: "green" }, nextStateIndex: { p1: 4, p2: 5, p3: 5, e: 4 } },
+//     { name: "S5", output: { ns: "red", ew: "yellow" }, nextStateIndex: { p1: 6, p2: 6, p3: 6, e: 6 } },
+//     { name: "S6", output: { ns: "red", ew: "red" }, nextStateIndex: { p1: 7, p2: 7, p3: 7, e: 7 } },
+//     { name: "S7", output: { ns: "red-yellow", ew: "red" }, nextStateIndex: { p1: 0, p2: 0, p3: 0, e: 0 } },
 // ];
 
+// prettier-ignore
 const states: State[] = [
-    { output: { ns: "green", ew: "red" }, nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 } }, // S0
-    { output: { ns: "red", ew: "green" }, nextStateIndex: { p1: 1, p2: 0, p3: 0, e: 1 } }, // S1
+    { name: "S0", output: { ns: "green", ew: "red" }, nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 }, },
+    { name: "S1", output: { ns: "red", ew: "green" }, nextStateIndex: { p1: 1, p2: 0, p3: 0, e: 1 }, },
 ];
 
 export class Sim {
@@ -107,6 +110,7 @@ export class Sim {
 
         const carsNS = this.north.getCount() + this.south.getCount();
         const carsEW = this.east.getCount() + this.west.getCount();
+        const prevStateName = this.state.name;
         let stateIndex = -1;
 
         if (this.timer >= this.greenMin && (carsEW / carsNS >= this.ratio || carsNS == 0)) {
@@ -120,7 +124,11 @@ export class Sim {
         }
 
         this.state = states[stateIndex];
-        this.timer++;
+        if (prevStateName == this.state.name) {
+            this.timer++;
+        } else {
+            this.timer = 0;
+        }
 
         return leftVehicles;
     }
