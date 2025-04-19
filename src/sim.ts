@@ -41,6 +41,11 @@ type LightState = {
 type State = {
     /** For checking if state changed, must be unique */
     name: string;
+    prefs: {
+        greenMin: number;
+        greenMax: number;
+        ratio: number;
+    };
     output: {
         /** North/South */
         ns: LightState;
@@ -54,52 +59,16 @@ type State = {
         p2: number;
         /** Change to red (max steps elapsed) */
         p3: number;
-        // /** Skip NS left arrow (0 cars waiting) */
-        // p4: number;
-        // /** Skip EW left arrow (0 cars waiting) */
-        // p5: number;
         /** No change */
-        e: number;
+        i: number;
     };
 };
 
-const states: State[] = [
-    {
-        name: "S0",
-        output: {
-            ns: { sr: "green", l: "red", cond: "red", ped: "red" },
-            ew: { sr: "red", l: "red", cond: "green", ped: "green" },
-        },
-        nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 },
-    },
-    {
-        name: "S1",
-        output: {
-            ns: { sr: "red", l: "green", cond: "red", ped: "red" },
-            ew: { sr: "red", l: "red", cond: "red", ped: "red" },
-        },
-        nextStateIndex: { p1: 2, p2: 1, p3: 2, e: 1 },
-    },
-    {
-        name: "S2",
-        output: {
-            ns: { sr: "red", l: "red", cond: "green", ped: "green" },
-            ew: { sr: "green", l: "red", cond: "red", ped: "red" },
-        },
-        nextStateIndex: { p1: 2, p2: 3, p3: 3, e: 2 },
-    },
-    {
-        name: "S3",
-        output: {
-            ns: { sr: "red", l: "red", cond: "red", ped: "red" },
-            ew: { sr: "red", l: "green", cond: "red", ped: "red" },
-        },
-        nextStateIndex: { p1: 3, p2: 0, p3: 0, e: 3 },
-    },
-];
-
 export class Sim {
     private state: State;
+    private readonly states: State[];
+    private readonly preferences: Preferences;
+
     /** Steps elapsed including current from the most recent light change */
     private timer = 1;
 
@@ -113,12 +82,64 @@ export class Sim {
     private readonly eastL = new Queue<Vehicle>();
     private readonly westSR = new Queue<Vehicle>();
     private readonly westL = new Queue<Vehicle>();
-    private readonly pedestrianRequests: Queue<Road> = new Queue();
-    private readonly preferences: Preferences;
 
-    constructor(preferences: Preferences) {
-        this.state = states[0];
-        this.preferences = preferences;
+    constructor(prefs: Preferences) {
+        this.states = [
+            {
+                name: "S0",
+                prefs: {
+                    greenMin: prefs.ns.sr.greenMin,
+                    greenMax: prefs.ns.sr.greenMax,
+                    ratio: prefs.ns.ratio,
+                },
+                output: {
+                    ns: { sr: "green", l: "red", cond: "red", ped: "red" },
+                    ew: { sr: "red", l: "red", cond: "green", ped: "green" },
+                },
+                nextStateIndex: { p1: 1, p2: 0, p3: 1, i: 0 },
+            },
+            {
+                name: "S1",
+                prefs: {
+                    greenMin: prefs.ns.l.greenMin,
+                    greenMax: prefs.ns.l.greenMax,
+                    ratio: prefs.ns.ratio,
+                },
+                output: {
+                    ns: { sr: "red", l: "green", cond: "red", ped: "red" },
+                    ew: { sr: "red", l: "red", cond: "red", ped: "red" },
+                },
+                nextStateIndex: { p1: 2, p2: 1, p3: 2, i: 1 },
+            },
+            {
+                name: "S2",
+                prefs: {
+                    greenMin: prefs.ew.sr.greenMin,
+                    greenMax: prefs.ew.sr.greenMax,
+                    ratio: prefs.ew.ratio,
+                },
+                output: {
+                    ns: { sr: "red", l: "red", cond: "green", ped: "green" },
+                    ew: { sr: "green", l: "red", cond: "red", ped: "red" },
+                },
+                nextStateIndex: { p1: 2, p2: 3, p3: 3, i: 2 },
+            },
+            {
+                name: "S3",
+                prefs: {
+                    greenMin: prefs.ew.l.greenMin,
+                    greenMax: prefs.ew.l.greenMax,
+                    ratio: prefs.ew.ratio,
+                },
+                output: {
+                    ns: { sr: "red", l: "red", cond: "red", ped: "red" },
+                    ew: { sr: "red", l: "green", cond: "red", ped: "red" },
+                },
+                nextStateIndex: { p1: 3, p2: 0, p3: 0, i: 3 },
+            },
+        ];
+        this.state = this.states[0];
+        this.preferences = prefs;
     }
 
     addVehicle(v: Vehicle, startRoad: Road): void {
@@ -160,10 +181,6 @@ export class Sim {
         }
     }
 
-    setPedestrianRequest(road: Road): void {
-        this.pedestrianRequests.enqueue(road);
-    }
-
     /**
      * @returns Vehicles that left the intersection during this step
      */
@@ -171,7 +188,6 @@ export class Sim {
         log("STEP:");
         log("state", this.state);
         log("timer", this.timer);
-        log("pedestrianRequests", this.pedestrianRequests.getCount(), "\n");
 
         const leftVehicles: Vehicle[] = [];
 
@@ -245,74 +261,43 @@ export class Sim {
         const carsNS_L = this.northL.getCount() + this.southL.getCount();
         const carsEW_SR = this.eastSR.getCount() + this.westSR.getCount();
         const carsEW_L = this.eastL.getCount() + this.westL.getCount();
-        const pedRequest = this.pedestrianRequests.peek();
-        const prevStateName = this.state.name;
 
         // Change NS to red faster
         const tooManyWaitingOnEW =
             carsNS_SR == 0 ||
             carsEW_SR / carsNS_SR >= this.preferences.ew.ratio ||
             (carsNS_L > 0 && carsEW_L / carsNS_L >= this.preferences.ew.ratio);
-        const isPedRequestNS = pedRequest == "north" || pedRequest == "south";
 
         // Change EW to read faster
         const tooManyWaitingOnNS =
             carsEW_SR == 0 ||
             carsNS_SR / carsEW_SR >= this.preferences.ns.ratio ||
             (carsEW_L > 0 && carsNS_L / carsEW_L >= this.preferences.ns.ratio);
-        const isPedRequestEW = pedRequest == "east" || pedRequest == "west";
-
-        // TODO: Move this to state, initialize states in constructor and pass preferences there
-        let greenMax = -1;
-        if (this.state.output.ns.sr == "green") {
-            greenMax = this.preferences.ns.sr.greenMax;
-        } else if (this.state.output.ns.l == "green") {
-            greenMax = this.preferences.ns.l.greenMax;
-        } else if (this.state.output.ew.sr == "green") {
-            greenMax = this.preferences.ew.sr.greenMax;
-        } else if (this.state.output.ew.l == "green") {
-            greenMax = this.preferences.ew.l.greenMax;
-        }
-
-        let greenMin = -1;
-        if (this.state.output.ns.sr == "green") {
-            greenMin = this.preferences.ns.sr.greenMin;
-        } else if (this.state.output.ns.l == "green") {
-            greenMin = this.preferences.ns.l.greenMin;
-        } else if (this.state.output.ew.sr == "green") {
-            greenMin = this.preferences.ew.sr.greenMin;
-        } else if (this.state.output.ew.l == "green") {
-            greenMin = this.preferences.ew.l.greenMin;
-        }
 
         // State transitions
-        let stateIndex: number;
-        if (this.timer >= greenMin && (tooManyWaitingOnEW || isPedRequestNS)) {
+        let nextStateIndex: number;
+        if (this.timer >= this.state.prefs.greenMin && tooManyWaitingOnEW) {
             // Too many cars waiting on EW or pedestrian request on NS
-            if (isPedRequestNS) {
-                this.pedestrianRequests.dequeue();
-            }
-            stateIndex = this.state.nextStateIndex.p1;
-        } else if (this.timer >= greenMin && (tooManyWaitingOnNS || isPedRequestEW)) {
+            nextStateIndex = this.state.nextStateIndex.p1;
+        } else if (this.timer >= this.state.prefs.greenMin && tooManyWaitingOnNS) {
             // Too many cars waiting on NS or pedestrian request on EW
-            if (isPedRequestEW) {
-                this.pedestrianRequests.dequeue();
-            }
-            stateIndex = this.state.nextStateIndex.p2;
-        } else if (this.timer >= greenMax) {
+            nextStateIndex = this.state.nextStateIndex.p2;
+        } else if (this.timer >= this.state.prefs.greenMax) {
             // Max time elapsed
-            stateIndex = this.state.nextStateIndex.p3;
+            nextStateIndex = this.state.nextStateIndex.p3;
         } else {
             // Don't change
-            stateIndex = this.state.nextStateIndex.e;
+            nextStateIndex = this.state.nextStateIndex.i;
         }
 
-        this.state = states[stateIndex];
-        if (prevStateName == this.state.name) {
-            this.timer++;
+        // If state changed reset timer, otherwise increment it
+        if (this.state.name != this.states[nextStateIndex].name) {
+            this.timer = 0;
         } else {
-            this.timer = 1;
+            this.timer++;
         }
+
+        this.state = this.states[nextStateIndex];
 
         return leftVehicles;
     }

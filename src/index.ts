@@ -45,9 +45,6 @@ for (const command of input.commands) {
             const leftVehicles = sim.step();
             output.stepStatuses.push({ leftVehicles: leftVehicles.map((v) => v.id) });
             break;
-        case "pedestrianRequest":
-            sim.setPedestrianRequest(command.road);
-            break;
     }
 }
 
