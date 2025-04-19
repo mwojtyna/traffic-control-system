@@ -1,5 +1,4 @@
 #include "io.h"
-#include "sim.h"
 
 #ifndef EMBEDDED
 #include <stdarg.h>
@@ -21,24 +20,14 @@ int io_readline(char* buf, int n) {
     if (ret == NULL) {
         return -1; // Error or EOF
     } else {
+        int newline_index = strcspn(buf, "\n");
+        buf[newline_index] = '\0'; // Remove newline
         return 0;
     }
 }
 
-// Returns current step, NULL if invalid
-char* io_currentstep(char* line) {
-    char* token = strtok(line, " ");
-    while (token) {
-        token = strtok(NULL, " ");
-        if (strcmp(token, SIM_ADDVEHICLE) == 0) {
-            return token;
-        } else if (strcmp(token, SIM_STEP) == 0) {
-            return token;
-        }
-    }
-
-    return NULL;
-}
+// Returns a lines of input
+int io_readinput(int argc, char** argv) {}
 
 #endif
 

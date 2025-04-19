@@ -1,7 +1,7 @@
 import json
 import subprocess
 import sys
-from typing import Literal, TypedDict, cast
+from typing import Literal, TypedDict
 
 type CommandType = Literal["addVehicle"] | Literal["step"]
 type Road = Literal["north"] | Literal["east"] | Literal["south"] | Literal["west"]

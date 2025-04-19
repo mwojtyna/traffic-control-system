@@ -1,2 +1,6 @@
 build/
 .cache/
+input.json
+input.txt
+output.txt
+output.json
