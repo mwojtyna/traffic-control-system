@@ -1,5 +1,11 @@
 import { type Road } from "./io.js";
-import { Queue, type Vehicle } from "./queue.js";
+import { log } from "./log.js";
+import { Queue } from "./queue.js";
+
+export interface Vehicle {
+    id: string;
+    endRoad: Road;
+}
 
 export type Light = "red" | "yellow" | "red-yellow" | "green";
 export type LightState = { ns: Light; ew: Light };
@@ -8,43 +14,36 @@ export type State = {
     name: string;
     output: LightState;
     nextStateIndex: {
-        p1: number; // timer >= greenMin && carsEW/carsNS >= ratio          (min time elapsed and too many cars waiting on EW, changing EW to green)
-        p2: number; // timer >= greenMin && carsNS/carsEW >= ratio          (min time elapsed and too many cars waiting on NS, changing NS to green)
-        p3: number; // timer >= greenMax                                    (max green time elapsed, changing to red)
-        e: number; //                                                       (when no predicates match)
-
-        // These transitions only changed states to themselves or to the next state (if all transitions changed to the next one), so the 'e' transition is equivalent to these.
-        // p4: number; // timer < greenMin                                   (min green time not elapsed, staying on green)
-        // p5: number; // timer >= greenMin && carsEW/carsNS < ratio         (min green time elapsed, but not changing NS to red because not enough cars waiting on EW)
-        // p6: number; // timer >= greenMin && carsNS/carsEW < ratio         (min green time elapsed, but not changing EW to red because not enough cars waiting on NS)
+        // TODO: Multiple lanes (<-, ^->)
+        // TODO: Green arrow
+        p1: number; //       Change to EW green
+        p2: number; //       Change to NS green
+        p3: number; //       Change to red
+        p4: number; //       Stay in the same state
     };
 };
 
-// // prettier-ignore
-// const states: State[] = [
-//     { name: "S0", output: { ns: "green", ew: "red" }, nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 } },
-//     { name: "S1", output: { ns: "yellow", ew: "red" }, nextStateIndex: { p1: 2, p2: 2, p3: 2, e: 2 } },
-//     { name: "S2", output: { ns: "red", ew: "red" }, nextStateIndex: { p1: 3, p2: 3, p3: 3, e: 3 } },
-//     { name: "S3", output: { ns: "red", ew: "red-yellow" }, nextStateIndex: { p1: 4, p2: 4, p3: 4, e: 4 } },
-//     { name: "S4", output: { ns: "red", ew: "green" }, nextStateIndex: { p1: 4, p2: 5, p3: 5, e: 4 } },
-//     { name: "S5", output: { ns: "red", ew: "yellow" }, nextStateIndex: { p1: 6, p2: 6, p3: 6, e: 6 } },
-//     { name: "S6", output: { ns: "red", ew: "red" }, nextStateIndex: { p1: 7, p2: 7, p3: 7, e: 7 } },
-//     { name: "S7", output: { ns: "red-yellow", ew: "red" }, nextStateIndex: { p1: 0, p2: 0, p3: 0, e: 0 } },
-// ];
-
-// prettier-ignore
 const states: State[] = [
-    { name: "S0", output: { ns: "green", ew: "red" }, nextStateIndex: { p1: 1, p2: 0, p3: 1, e: 0 }, },
-    { name: "S1", output: { ns: "red", ew: "green" }, nextStateIndex: { p1: 1, p2: 0, p3: 0, e: 1 }, },
+    {
+        name: "S0",
+        output: { ns: "green", ew: "red" },
+        nextStateIndex: { p1: 1, p2: 0, p3: 1, p4: 0 },
+    },
+    {
+        name: "S1",
+        output: { ns: "red", ew: "green" },
+        nextStateIndex: { p1: 1, p2: 0, p3: 0, p4: 1 },
+    },
 ];
 
 export class Sim {
     private state: State;
     private timer: number; // Steps elapsed from the most recent light change
-    private north: Queue;
-    private south: Queue;
-    private east: Queue;
-    private west: Queue;
+    private north: Queue<Vehicle>;
+    private south: Queue<Vehicle>;
+    private east: Queue<Vehicle>;
+    private west: Queue<Vehicle>;
+    private pedestrianRequests: Queue<Road>;
 
     // Preferences
     private ratio: number;
@@ -63,29 +62,42 @@ export class Sim {
         this.south = new Queue();
         this.east = new Queue();
         this.west = new Queue();
+        this.pedestrianRequests = new Queue();
         this.ratio = ratio;
         this.greenMin = greenMin;
         this.greenMax = greenMax;
     }
 
-    addVehicle(id: string, startRoad: Road, endRoad: Road): void {
+    addVehicle(v: Vehicle, startRoad: Road): void {
         switch (startRoad) {
             case "north":
-                this.north.enqueue(id, endRoad);
+                this.north.enqueue(v);
                 break;
             case "south":
-                this.south.enqueue(id, endRoad);
+                this.south.enqueue(v);
                 break;
             case "east":
-                this.east.enqueue(id, endRoad);
+                this.east.enqueue(v);
                 break;
             case "west":
-                this.west.enqueue(id, endRoad);
+                this.west.enqueue(v);
                 break;
         }
     }
 
+    setPedestrianRequest(road: Road): void {
+        this.pedestrianRequests.enqueue(road);
+    }
+
+    /**
+     * @returns Vehicles that left the intersection during this step
+     */
     step(): Vehicle[] {
+        log("STEP:");
+        log("state", this.state);
+        log("timer", this.timer);
+        log("pedestrianRequests", this.pedestrianRequests.getCount(), "\n");
+
         const leftVehicles: Vehicle[] = [];
 
         if (this.state.output.ns == "green" || this.state.output.ns == "yellow") {
@@ -110,17 +122,35 @@ export class Sim {
 
         const carsNS = this.north.getCount() + this.south.getCount();
         const carsEW = this.east.getCount() + this.west.getCount();
+        const pedRequest = this.pedestrianRequests.peek();
+
         const prevStateName = this.state.name;
         let stateIndex = -1;
 
-        if (this.timer >= this.greenMin && (carsEW / carsNS >= this.ratio || carsNS == 0)) {
+        if (this.timer >= this.greenMin && (carsNS == 0 || carsEW / carsNS >= this.ratio)) {
+            // min time elapsed and too many cars waiting on EW, changing EW to green
             stateIndex = this.state.nextStateIndex.p1;
-        } else if (this.timer >= this.greenMin && (carsNS / carsEW >= this.ratio || carsEW == 0)) {
+        } else if (
+            this.timer >= this.greenMin &&
+            (pedRequest == "north" || pedRequest == "south")
+        ) {
+            // min time elapsed and crossing request on NS, changing EW to green
+            this.pedestrianRequests.dequeue();
+            stateIndex = this.state.nextStateIndex.p1;
+        } else if (this.timer >= this.greenMin && (carsEW == 0 || carsNS / carsEW >= this.ratio)) {
+            // min time elapsed and too many cars waiting on NS, changing NS to green
+            this.pedestrianRequests.dequeue();
+            stateIndex = this.state.nextStateIndex.p2;
+        } else if (this.timer >= this.greenMin && (pedRequest == "east" || pedRequest == "west")) {
+            // min time elapsed and crossing request on EW, changing NS to green
+            this.pedestrianRequests.dequeue();
             stateIndex = this.state.nextStateIndex.p2;
         } else if (this.timer >= this.greenMax) {
+            // max green time elapsed, changing to red
             stateIndex = this.state.nextStateIndex.p3;
         } else {
-            stateIndex = this.state.nextStateIndex.e;
+            // when no predicates match
+            stateIndex = this.state.nextStateIndex.p4;
         }
 
         this.state = states[stateIndex];

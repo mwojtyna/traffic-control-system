@@ -1,14 +1,11 @@
-import { Road } from "./io.js";
-
-export type Vehicle = {
-    id: string;
-    endRoad: Road;
-    next: Vehicle | null;
+type Node<T> = {
+    data: T;
+    next: Node<T> | null;
 };
 
-export class Queue {
-    private head: Vehicle | null;
-    private tail: Vehicle | null;
+export class Queue<T> {
+    private head: Node<T> | null;
+    private tail: Node<T> | null;
     private count: number;
 
     constructor() {
@@ -17,37 +14,40 @@ export class Queue {
         this.count = 0;
     }
 
-    enqueue(id: string, endRoad: Road): void {
-        const v: Vehicle = {
-            id: id,
-            endRoad: endRoad,
+    enqueue(t: T): void {
+        const node: Node<T> = {
+            data: t,
             next: null,
         };
 
         if (this.tail) {
-            this.tail.next = v;
+            this.tail.next = node;
         } else {
-            this.head = v;
+            this.head = node;
         }
-        this.tail = v;
+        this.tail = node;
 
         this.count++;
     }
 
-    dequeue(): Vehicle | null {
+    dequeue(): T | null {
         if (!this.head) {
             return null;
         }
 
-        const v = this.head;
-        this.head = v.next;
+        const node = this.head;
+        this.head = node.next;
 
         if (!this.head) {
             this.tail = null;
         }
         this.count--;
 
-        return v;
+        return node.data;
+    }
+
+    peek(): T | null {
+        return this.head?.data ?? null;
     }
 
     getCount(): number {

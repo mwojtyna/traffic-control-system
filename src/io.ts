@@ -1,23 +1,33 @@
 import { open, readFile } from "node:fs/promises";
 
+export type Road = "north" | "east" | "south" | "west";
+
+export type Command =
+    | {
+          type: "addVehicle";
+          vehicleId: string;
+          startRoad: Road;
+          endRoad: Road;
+      }
+    | {
+          type: "step";
+      }
+    | {
+          type: "pedestrianRequest";
+          road: Road;
+      };
+
 export type Input = {
     commands: Command[];
 };
-export type Command = {
-    type: CommandType;
-    vehicleId: string;
-    startRoad: Road;
-    endRoad: Road;
-};
+
 export type Output = {
     stepStatuses: StepStatus[];
 };
+
 export type StepStatus = {
     leftVehicles: string[];
 };
-
-export type CommandType = "addVehicle" | "step";
-export type Road = "north" | "east" | "south" | "west";
 
 export async function readInput(fileName: string): Promise<Input> {
     const file = await readFile(fileName);

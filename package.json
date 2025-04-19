@@ -7,8 +7,9 @@
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "start": "node .",
-        "dev": "tsx ./src/index.ts",
+        "start": "NODE_ENV=production node .",
+        "dev": "NODE_ENV=development tsx ./src/index.ts",
+        "lint": "tsc --noEmit",
         "build": "tsc"
     },
     "devDependencies": {

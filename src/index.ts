@@ -1,11 +1,11 @@
 import { exit } from "node:process";
 import { type Input, Output, readInput, writeOutput } from "./io.js";
 import { Sim } from "./sim.js";
+import { fatal, log } from "./log.js";
 
 // 4 because 1st is node, 2nd is index.ts
 if (process.argv.length != 4) {
-    console.error(`Usage: npm start input.json output.json`);
-    exit(1);
+    fatal(`Usage: npm start input.json output.json`);
 }
 
 const inputFileName = process.argv[2];
@@ -16,9 +16,10 @@ let input: Input;
 try {
     input = await readInput(inputFileName);
 } catch (e) {
-    console.error(`Error reading input file: "${e}"`);
+    fatal(`Error reading input file: "${e}"`);
     exit(1);
 }
+log("input", input);
 
 // Simulate
 const output: Output = { stepStatuses: [] };
@@ -27,11 +28,14 @@ const sim = new Sim(2, 1, 10);
 for (const command of input.commands) {
     switch (command.type) {
         case "addVehicle":
-            sim.addVehicle(command.vehicleId, command.startRoad, command.endRoad);
+            sim.addVehicle({ id: command.vehicleId, endRoad: command.endRoad }, command.startRoad);
             break;
         case "step":
             const leftVehicles = sim.step();
             output.stepStatuses.push({ leftVehicles: leftVehicles.map((v) => v.id) });
+            break;
+        case "pedestrianRequest":
+            sim.setPedestrianRequest(command.road);
             break;
     }
 }
@@ -40,6 +44,6 @@ for (const command of input.commands) {
 try {
     await writeOutput(outputFileName, output);
 } catch (e) {
-    console.error(`Error writing to output file: "${e}"`);
+    fatal(`Error writing to output file: "${e}"`);
     exit(1);
 }
