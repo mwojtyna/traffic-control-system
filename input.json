@@ -1,0 +1,94 @@
+{
+    "config": {
+        "states": {
+            "NS_SR": { "greenMin": 3, "greenMax": 5, "ratio": 1.5 },
+            "NS_L": { "greenMin": 0, "greenMax": 3, "ratio": 1.5 },
+            "EW_SR": { "greenMin": 3, "greenMax": 5, "ratio": 1.5 },
+            "EW_L": { "greenMin": 0, "greenMax": 3, "ratio": 1.5 }
+        }
+    },
+
+    "commands": [
+        {
+            "type": "addVehicle",
+            "vehicleId": "n->w-1",
+            "startRoad": "north",
+            "endRoad": "west"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "s->e-1",
+            "startRoad": "south",
+            "endRoad": "east"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "n->s-1",
+            "startRoad": "north",
+            "endRoad": "south"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "e->n-1",
+            "startRoad": "east",
+            "endRoad": "north"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "w->s-1",
+            "startRoad": "west",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "w->e-1",
+            "startRoad": "west",
+            "endRoad": "east"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "s->n-1",
+            "startRoad": "south",
+            "endRoad": "north"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "n->s-2",
+            "startRoad": "north",
+            "endRoad": "south"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "e->w-1",
+            "startRoad": "east",
+            "endRoad": "west"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "w->e-2",
+            "startRoad": "west",
+            "endRoad": "east"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        }
+    ]
+}

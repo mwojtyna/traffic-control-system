@@ -53,7 +53,6 @@ export class Sim {
     private readonly pedRequestsEW = new Queue<Road>();
 
     constructor(config: Config) {
-        log("config", config.states.NS_SR.greenMin);
         this.states = [
             {
                 name: "NS_SR",
