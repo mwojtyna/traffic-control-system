@@ -1,29 +1,10 @@
-import { type Road } from "./io.js";
+import { Config, Road, StateConfig, StateName } from "./io.js";
 import { error, log } from "./log.js";
 import { Queue } from "./queue.js";
 
 type Vehicle = {
     id: string;
     endRoad: Road;
-};
-
-type LightPreferences = {
-    /** Minimum number of steps before green ends */
-    greenMin: number;
-    /** Maximum number of steps before green ends */
-    greenMax: number;
-};
-type DirectionPreferences = {
-    /** Change red to green when this_dir_cars_stopped/opposite_dir_cars_going >= ratio */
-    ratio: number;
-    /** North/South Straight&Right */
-    sr: LightPreferences;
-    /** North/South Left */
-    l: LightPreferences;
-};
-type Preferences = {
-    ns: DirectionPreferences;
-    ew: DirectionPreferences;
 };
 
 type Light = "red" | "green";
@@ -38,15 +19,10 @@ type LightState = {
     cond: Light;
 };
 
-type StateName = "S0" | "S1" | "S2" | "S3";
 type State = {
     /** For checking if state changed, must be unique */
     name: StateName;
-    prefs: {
-        greenMin: number;
-        greenMax: number;
-        ratio: number;
-    };
+    prefs: StateConfig;
     output: {
         /** North/South */
         ns: LightState;
@@ -73,16 +49,15 @@ export class Sim {
     private readonly eastL = new Queue<Vehicle>();
     private readonly westSR = new Queue<Vehicle>();
     private readonly westL = new Queue<Vehicle>();
+    private readonly pedRequestsNS = new Queue<Road>();
+    private readonly pedRequestsEW = new Queue<Road>();
 
-    constructor(prefs: Preferences) {
+    constructor(config: Config) {
+        log("config", config.states.NS_SR.greenMin);
         this.states = [
             {
-                name: "S0",
-                prefs: {
-                    greenMin: prefs.ns.sr.greenMin,
-                    greenMax: prefs.ns.sr.greenMax,
-                    ratio: prefs.ns.ratio,
-                },
+                name: "NS_SR",
+                prefs: config.states.NS_SR,
                 output: {
                     ns: { sr: "green", l: "red", cond: "red", ped: "red" },
                     ew: { sr: "red", l: "red", cond: "green", ped: "green" },
@@ -90,12 +65,8 @@ export class Sim {
                 nextStateIndex: 1,
             },
             {
-                name: "S1",
-                prefs: {
-                    greenMin: prefs.ns.l.greenMin,
-                    greenMax: prefs.ns.l.greenMax,
-                    ratio: prefs.ns.ratio,
-                },
+                name: "NS_L",
+                prefs: config.states.NS_L,
                 output: {
                     ns: { sr: "red", l: "green", cond: "red", ped: "red" },
                     ew: { sr: "red", l: "red", cond: "red", ped: "red" },
@@ -103,12 +74,8 @@ export class Sim {
                 nextStateIndex: 2,
             },
             {
-                name: "S2",
-                prefs: {
-                    greenMin: prefs.ew.sr.greenMin,
-                    greenMax: prefs.ew.sr.greenMax,
-                    ratio: prefs.ew.ratio,
-                },
+                name: "EW_SR",
+                prefs: config.states.EW_SR,
                 output: {
                     ns: { sr: "red", l: "red", cond: "green", ped: "green" },
                     ew: { sr: "green", l: "red", cond: "red", ped: "red" },
@@ -116,12 +83,8 @@ export class Sim {
                 nextStateIndex: 3,
             },
             {
-                name: "S3",
-                prefs: {
-                    greenMin: prefs.ew.l.greenMin,
-                    greenMax: prefs.ew.l.greenMax,
-                    ratio: prefs.ew.ratio,
-                },
+                name: "EW_L",
+                prefs: config.states.EW_L,
                 output: {
                     ns: { sr: "red", l: "red", cond: "red", ped: "red" },
                     ew: { sr: "red", l: "green", cond: "red", ped: "red" },
@@ -171,6 +134,14 @@ export class Sim {
         }
     }
 
+    pedestrianRequest(road: Road): void {
+        if (road == "north" || road == "south") {
+            this.pedRequestsNS.enqueue(road);
+        } else if (road == "east" || road == "west") {
+            this.pedRequestsEW.enqueue(road);
+        }
+    }
+
     /**
      * @returns Vehicles that left the intersection during this step
      */
@@ -178,6 +149,8 @@ export class Sim {
         log("STEP:");
         log("state", this.state);
         log("timer", this.timer);
+        log("pedRequestsNS", this.pedRequestsNS.getCount());
+        log("pedRequestsEW", this.pedRequestsEW.getCount());
 
         const leftVehicles: Vehicle[] = [];
 
@@ -255,22 +228,38 @@ export class Sim {
         // State transitions
         let changedState = false;
         switch (this.state.name) {
-            case "S0":
-                if (this.shouldEndStateSR(carsEW_SR / (carsNS_SR + 1), carsNS_SR, carsNS_L)) {
+            case "NS_SR":
+                this.pedRequestsEW.dequeue();
+                if (
+                    this.shouldEndStateSR(
+                        carsNS_SR > 0 ? carsEW_SR / carsNS_SR : this.state.prefs.ratio,
+                        carsNS_SR,
+                        carsNS_L,
+                        this.pedRequestsNS.getCount(),
+                    )
+                ) {
                     changedState = true;
                 }
                 break;
-            case "S1":
+            case "NS_L":
                 if (this.shouldEndStateL(carsNS_L)) {
                     changedState = true;
                 }
                 break;
-            case "S2":
-                if (this.shouldEndStateSR(carsNS_SR / (carsEW_SR + 1), carsEW_SR, carsEW_L)) {
+            case "EW_SR":
+                this.pedRequestsNS.dequeue();
+                if (
+                    this.shouldEndStateSR(
+                        carsEW_SR > 0 ? carsNS_SR / carsEW_SR : this.state.prefs.ratio,
+                        carsEW_SR,
+                        carsEW_L,
+                        this.pedRequestsEW.getCount(),
+                    )
+                ) {
                     changedState = true;
                 }
                 break;
-            case "S3":
+            case "EW_L":
                 if (this.shouldEndStateL(carsEW_L)) {
                     changedState = true;
                 }
@@ -290,12 +279,19 @@ export class Sim {
     }
 
     /**
-     * @param carRatio - End state when cars_stopped/cars_going >= ratio
+     * @param carRatio - cars_stopped/cars_going
      */
-    private shouldEndStateSR(carRatio: number, carsSR: number, carsL: number): boolean {
+    private shouldEndStateSR(
+        carRatio: number,
+        carsSR: number,
+        carsL: number,
+        pedRequests: number,
+    ): boolean {
         return (
             (this.timer >= this.state.prefs.greenMin &&
-                (carRatio >= this.state.prefs.ratio || (carsSR == 0 && carsL > 0))) ||
+                (carRatio >= this.state.prefs.ratio ||
+                    (carsSR == 0 && carsL > 0) ||
+                    pedRequests > 0)) ||
             this.timer >= this.state.prefs.greenMax
         );
     }

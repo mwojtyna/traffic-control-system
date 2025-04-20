@@ -1,5 +1,5 @@
 import { exit } from "node:process";
-import { type Input, Output, readInput, writeOutput } from "./io.js";
+import { Config, Input, Output, readInput, writeOutput } from "./io.js";
 import { Sim } from "./sim.js";
 import { fatal, log } from "./log.js";
 
@@ -23,18 +23,15 @@ log("input", input);
 
 // Simulate
 const output: Output = { stepStatuses: [] };
-const sim = new Sim({
-    ns: {
-        sr: { greenMin: 0, greenMax: 5 },
-        l: { greenMin: 0, greenMax: 3 },
-        ratio: 3 / 2,
+const defaultConfig: Config = {
+    states: {
+        NS_SR: { greenMin: 0, greenMax: 5, ratio: 3 / 2 },
+        NS_L: { greenMin: 0, greenMax: 3, ratio: 3 / 2 },
+        EW_SR: { greenMin: 0, greenMax: 5, ratio: 3 / 2 },
+        EW_L: { greenMin: 0, greenMax: 3, ratio: 3 / 2 },
     },
-    ew: {
-        sr: { greenMin: 0, greenMax: 5 },
-        l: { greenMin: 0, greenMax: 3 },
-        ratio: 3 / 2,
-    },
-});
+};
+const sim = new Sim(input.config ?? defaultConfig);
 
 for (const command of input.commands) {
     switch (command.type) {
@@ -44,6 +41,9 @@ for (const command of input.commands) {
         case "step":
             const leftVehicles = sim.step();
             output.stepStatuses.push({ leftVehicles: leftVehicles.map((v) => v.id) });
+            break;
+        case "pedestrianRequest":
+            sim.pedestrianRequest(command.road);
             break;
     }
 }
