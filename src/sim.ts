@@ -38,9 +38,10 @@ type LightState = {
     cond: Light;
 };
 
+type StateName = "S0" | "S1" | "S2" | "S3";
 type State = {
     /** For checking if state changed, must be unique */
-    name: string;
+    name: StateName;
     prefs: {
         greenMin: number;
         greenMax: number;
@@ -52,25 +53,15 @@ type State = {
         /** East/West */
         ew: LightState;
     };
-    nextStateIndex: {
-        /** Change faster to EW green */
-        p1: number;
-        /** Change faster to NS green */
-        p2: number;
-        /** Change to red (max steps elapsed) */
-        p3: number;
-        /** No change */
-        i: number;
-    };
+    nextStateIndex: number;
 };
 
 export class Sim {
     private state: State;
     private readonly states: State[];
-    private readonly preferences: Preferences;
 
     /** Steps elapsed including current from the most recent light change */
-    private timer = 1;
+    private timer = 0;
 
     // SR = Straight&Right
     // L = left
@@ -96,7 +87,7 @@ export class Sim {
                     ns: { sr: "green", l: "red", cond: "red", ped: "red" },
                     ew: { sr: "red", l: "red", cond: "green", ped: "green" },
                 },
-                nextStateIndex: { p1: 1, p2: 0, p3: 1, i: 0 },
+                nextStateIndex: 1,
             },
             {
                 name: "S1",
@@ -109,7 +100,7 @@ export class Sim {
                     ns: { sr: "red", l: "green", cond: "red", ped: "red" },
                     ew: { sr: "red", l: "red", cond: "red", ped: "red" },
                 },
-                nextStateIndex: { p1: 2, p2: 1, p3: 2, i: 1 },
+                nextStateIndex: 2,
             },
             {
                 name: "S2",
@@ -122,7 +113,7 @@ export class Sim {
                     ns: { sr: "red", l: "red", cond: "green", ped: "green" },
                     ew: { sr: "green", l: "red", cond: "red", ped: "red" },
                 },
-                nextStateIndex: { p1: 2, p2: 3, p3: 3, i: 2 },
+                nextStateIndex: 3,
             },
             {
                 name: "S3",
@@ -135,11 +126,10 @@ export class Sim {
                     ns: { sr: "red", l: "red", cond: "red", ped: "red" },
                     ew: { sr: "red", l: "green", cond: "red", ped: "red" },
                 },
-                nextStateIndex: { p1: 3, p2: 0, p3: 0, i: 3 },
+                nextStateIndex: 0,
             },
         ];
         this.state = this.states[0];
-        this.preferences = prefs;
     }
 
     addVehicle(v: Vehicle, startRoad: Road): void {
@@ -262,43 +252,58 @@ export class Sim {
         const carsEW_SR = this.eastSR.getCount() + this.westSR.getCount();
         const carsEW_L = this.eastL.getCount() + this.westL.getCount();
 
-        // Change NS to red faster
-        const tooManyWaitingOnEW =
-            carsNS_SR == 0 ||
-            carsEW_SR / carsNS_SR >= this.preferences.ew.ratio ||
-            (carsNS_L > 0 && carsEW_L / carsNS_L >= this.preferences.ew.ratio);
-
-        // Change EW to read faster
-        const tooManyWaitingOnNS =
-            carsEW_SR == 0 ||
-            carsNS_SR / carsEW_SR >= this.preferences.ns.ratio ||
-            (carsEW_L > 0 && carsNS_L / carsEW_L >= this.preferences.ns.ratio);
-
         // State transitions
-        let nextStateIndex: number;
-        if (this.timer >= this.state.prefs.greenMin && tooManyWaitingOnEW) {
-            // Too many cars waiting on EW or pedestrian request on NS
-            nextStateIndex = this.state.nextStateIndex.p1;
-        } else if (this.timer >= this.state.prefs.greenMin && tooManyWaitingOnNS) {
-            // Too many cars waiting on NS or pedestrian request on EW
-            nextStateIndex = this.state.nextStateIndex.p2;
-        } else if (this.timer >= this.state.prefs.greenMax) {
-            // Max time elapsed
-            nextStateIndex = this.state.nextStateIndex.p3;
-        } else {
-            // Don't change
-            nextStateIndex = this.state.nextStateIndex.i;
+        let changedState = false;
+        switch (this.state.name) {
+            case "S0":
+                if (this.shouldEndStateSR(carsEW_SR / (carsNS_SR + 1), carsNS_SR, carsNS_L)) {
+                    changedState = true;
+                }
+                break;
+            case "S1":
+                if (this.shouldEndStateL(carsNS_L)) {
+                    changedState = true;
+                }
+                break;
+            case "S2":
+                if (this.shouldEndStateSR(carsNS_SR / (carsEW_SR + 1), carsEW_SR, carsEW_L)) {
+                    changedState = true;
+                }
+                break;
+            case "S3":
+                if (this.shouldEndStateL(carsEW_L)) {
+                    changedState = true;
+                }
+                break;
         }
 
-        // If state changed reset timer, otherwise increment it
-        if (this.state.name != this.states[nextStateIndex].name) {
+        if (changedState) {
+            this.state = this.states[this.state.nextStateIndex];
             this.timer = 0;
         } else {
             this.timer++;
         }
 
-        this.state = this.states[nextStateIndex];
+        log("leftVehicles", leftVehicles, "\n");
 
         return leftVehicles;
+    }
+
+    /**
+     * @param carRatio - End state when cars_stopped/cars_going >= ratio
+     */
+    private shouldEndStateSR(carRatio: number, carsSR: number, carsL: number): boolean {
+        return (
+            (this.timer >= this.state.prefs.greenMin &&
+                (carRatio >= this.state.prefs.ratio || (carsSR == 0 && carsL > 0))) ||
+            this.timer >= this.state.prefs.greenMax
+        );
+    }
+
+    private shouldEndStateL(carsAmount: number): boolean {
+        return (
+            (this.timer >= this.state.prefs.greenMin && carsAmount == 0) ||
+            this.timer >= this.state.prefs.greenMax
+        );
     }
 }

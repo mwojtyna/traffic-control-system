@@ -25,14 +25,14 @@ log("input", input);
 const output: Output = { stepStatuses: [] };
 const sim = new Sim({
     ns: {
-        sr: { greenMin: 2, greenMax: 5 },
+        sr: { greenMin: 0, greenMax: 5 },
         l: { greenMin: 0, greenMax: 3 },
-        ratio: 2,
+        ratio: 3 / 2,
     },
     ew: {
-        sr: { greenMin: 2, greenMax: 5 },
+        sr: { greenMin: 0, greenMax: 5 },
         l: { greenMin: 0, greenMax: 3 },
-        ratio: 2,
+        ratio: 3 / 2,
     },
 });
 
