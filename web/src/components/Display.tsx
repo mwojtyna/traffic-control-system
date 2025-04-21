@@ -9,7 +9,7 @@ import condRedImgPath from "@/../assets/cond_red.png?url";
 import pedGreenImgPath from "@/../assets/ped_green.png?url";
 import pedRedImgPath from "@/../assets/ped_red.png?url";
 import pedRequestImgPath from "@/../assets/ped_request.png?url";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { StateSnapshot } from "@/types";
 
 type Route = "north" | "south" | "west" | "east";
@@ -201,25 +201,10 @@ type CarImgProps = {
 };
 
 function CarImg(props: CarImgProps) {
-    const divRef = useRef<HTMLDivElement>(null);
-    const pRef = useRef<HTMLParagraphElement>(null);
-    const [divWidth, setDivWidth] = useState(0);
-    useEffect(() => {
-        const listener = () => {
-            if (divRef.current) {
-                setDivWidth(divRef.current.clientWidth);
-            }
-        };
-        if (divRef.current) {
-            setDivWidth(divRef.current.clientWidth);
-        }
-        window.addEventListener("resize", listener);
-        return () => window.removeEventListener("resize", listener);
-    }, []);
+    const hueRotation = useRef(Math.random() * 360);
 
     return (
         <div
-            ref={divRef}
             className="absolute w-[7.5%]"
             title={props.car.id}
             style={{
@@ -229,13 +214,17 @@ function CarImg(props: CarImgProps) {
             }}
         >
             <p
-                ref={pRef}
-                className="absolute top-[7%] left-[30%] text-center font-mono font-bold text-white"
-                style={{ rotate: -props.rotation + "deg", fontSize: divWidth * 0.3 }}
+                className="absolute top-[7%] left-[30%] z-10 text-center font-mono text-lg font-bold text-white"
+                style={{ rotate: -props.rotation + "deg", fontSize: "1.5rem" }}
             >
                 {props.car.endRoad.at(0)!.toUpperCase()}
             </p>
-            <img src={carImgPath} />
+            <img
+                src={carImgPath}
+                style={{
+                    filter: `hue-rotate(${hueRotation.current}deg)`,
+                }}
+            />
         </div>
     );
 }
