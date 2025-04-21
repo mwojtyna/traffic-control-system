@@ -41,22 +41,6 @@ export default function App() {
     const [states, setStates] = useState<StateSnapshot[]>([]);
     const [currentStateIndex, setCurrentStateIndex] = useState(0);
 
-    function onNext() {
-        if (currentStateIndex + 1 < states.length) {
-            setCurrentStateIndex(currentStateIndex + 1);
-            return true;
-        } else {
-            return false;
-        }
-    }
-    function onPrevious() {
-        if (currentStateIndex - 1 >= 0) {
-            setCurrentStateIndex(currentStateIndex - 1);
-            return true;
-        } else {
-            return false;
-        }
-    }
     async function onFileChanged(file: File) {
         const text = await file.text();
         const json = JSON.parse(text);
@@ -77,11 +61,10 @@ export default function App() {
             <Display state={states[currentStateIndex] ?? defaultState} />
 
             <Controls
-                onNext={onNext}
-                onPrevious={onPrevious}
                 onFileChanged={onFileChanged}
-                firstState={states.length > 0 && currentStateIndex == 0}
-                lastState={states.length > 0 && currentStateIndex == states.length - 1}
+                onIndexChanged={(i) => setCurrentStateIndex(i)}
+                first={states.length > 0 && currentStateIndex == 0}
+                last={states.length > 0 && currentStateIndex == states.length - 1}
                 disable={states.length == 0}
                 command={
                     states[currentStateIndex]

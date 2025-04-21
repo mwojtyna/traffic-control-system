@@ -2,11 +2,11 @@ import { StateSnapshot } from "@/types";
 import { useEffect, useRef } from "react";
 
 type ControlsProps = {
-    onNext: () => void;
-    onPrevious: () => void;
     onFileChanged: (file: File) => void;
-    firstState: boolean;
-    lastState: boolean;
+    onIndexChanged: (index: number) => void;
+
+    first: boolean;
+    last: boolean;
     disable: boolean;
     command: {
         type: StateSnapshot["type"];
@@ -47,32 +47,43 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
 
             <div className="flex flex-col gap-1">
                 <label className="text-xl font-bold">Controls</label>
-                <div className="flex gap-2">
-                    <ControlButton
-                        onClick={props.onPrevious}
-                        disabled={props.firstState || props.disable}
-                    >
-                        Previous
-                    </ControlButton>
-                    {/* <ControlButton disabled={props.disable}>Play/Pause</ControlButton> */}
-                    <ControlButton
-                        onClick={props.onNext}
-                        disabled={props.lastState || props.disable}
-                    >
-                        Next
-                    </ControlButton>
+
+                <div className="space-y-3">
+                    <div className="flex w-full gap-3">
+                        <input
+                            className="w-full"
+                            type="range"
+                            min={1}
+                            max={props.commandCount}
+                            value={props.command ? props.command.index + 1 : 0}
+                            onChange={(e) =>
+                                props.onIndexChanged(e.currentTarget.valueAsNumber - 1)
+                            }
+                        />
+                        <pre className="font-bold">
+                            {props.command ? props.command.index + 1 : 0}/{props.commandCount}
+                        </pre>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <ControlButton
+                            onClick={() => props.onIndexChanged(props.command!.index - 1)}
+                            disabled={props.first || props.disable}
+                        >
+                            Previous
+                        </ControlButton>
+                        <ControlButton
+                            onClick={() => props.onIndexChanged(props.command!.index + 1)}
+                            disabled={props.last || props.disable}
+                        >
+                            Next
+                        </ControlButton>
+                    </div>
                 </div>
             </div>
 
             <div className="flex flex-col gap-1">
-                <label className="text-xl font-bold">
-                    Command details{" "}
-                    {props.command && (
-                        <>
-                            ({props.command.index + 1}/{props.commandCount})
-                        </>
-                    )}
-                </label>
+                <label className="text-xl font-bold">Command details</label>
                 <pre>
                     <p>type: {props.command?.type ?? "N/A"}</p>
                 </pre>
