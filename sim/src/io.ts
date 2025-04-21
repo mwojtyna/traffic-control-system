@@ -1,6 +1,8 @@
 import { open, readFile } from "node:fs/promises";
 import { z } from "zod";
+import { LightState, Vehicle } from "./sim.js";
 
+// Config
 const StateConfigSchema = z.object({
     /** Minimum number of steps before green ends */
     greenMin: z.number(),
@@ -18,6 +20,7 @@ const ConfigSchema = z.object({
         ),
 });
 
+// Command
 const RoadSchema = z.enum(["north", "east", "south", "west"]);
 const CommandSchema = z.union([
     z.object({
@@ -35,6 +38,7 @@ const CommandSchema = z.union([
     }),
 ]);
 
+// Input
 const InputSchema = z.object({
     config: ConfigSchema.optional(),
     commands: z.array(CommandSchema),
@@ -44,24 +48,49 @@ export type StateConfig = z.infer<typeof StateConfigSchema>;
 export type StateName = z.infer<typeof StateNameSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 export type Road = z.infer<typeof RoadSchema>;
+export type Command = z.infer<typeof CommandSchema>;
+export type CommandType = Command["type"];
 export type Input = z.infer<typeof InputSchema>;
 
+// Output
 type StepStatus = {
     leftVehicles: string[];
 };
-
 export type Output = {
     stepStatuses: StepStatus[];
 };
 
+// Recording
+export type RecordingStepData = {
+    lights: {
+        ns: LightState;
+        ew: LightState;
+    };
+    cars: {
+        n_sr: Vehicle[];
+        n_l: Vehicle[];
+        s_sr: Vehicle[];
+        s_l: Vehicle[];
+        e_sr: Vehicle[];
+        e_l: Vehicle[];
+        w_sr: Vehicle[];
+        w_l: Vehicle[];
+    };
+};
+export type SimRecording = {
+    steps: { stepType: CommandType; data: RecordingStepData }[];
+};
+
 export async function readInput(fileName: string): Promise<Input> {
     const file = await readFile(fileName);
-    const input = JSON.parse(file.toString()) as Input;
-    await InputSchema.parseAsync(input);
+    const json = JSON.parse(file.toString());
+    const input = InputSchema.parse(json);
     return input;
 }
 
-export async function writeOutput(fileName: string, output: Output): Promise<void> {
+export async function writeOutput<T>(fileName: string, data: T): Promise<void> {
     const file = await open(fileName, "w");
-    await file.writeFile(JSON.stringify(output, null, 4));
+    await file.writeFile(JSON.stringify(data, null, 4));
+    await file.close();
+    console.log(`Wrote data to ${fileName}`);
 }

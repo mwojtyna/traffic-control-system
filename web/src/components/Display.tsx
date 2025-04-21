@@ -9,13 +9,14 @@ import condRedImgPath from "@/../assets/cond_red.png?url";
 import pedGreenImgPath from "@/../assets/ped_green.png?url";
 import pedRedImgPath from "@/../assets/ped_red.png?url";
 import { useEffect, useRef, useState } from "react";
+import { RecordingState } from "@/types";
 
 type Route = "north" | "south" | "west" | "east";
 type Light = "red" | "green";
 
 type Car = {
     id: string;
-    end: Route;
+    endRoad: Route;
 };
 
 type Lights = {
@@ -25,22 +26,7 @@ type Lights = {
     cond: Light;
 };
 type ScreenProps = {
-    state: {
-        cars: {
-            n_sr: Car[];
-            n_l: Car[];
-            s_sr: Car[];
-            s_l: Car[];
-            e_sr: Car[];
-            e_l: Car[];
-            w_sr: Car[];
-            w_l: Car[];
-        };
-        lights: {
-            ns: Lights;
-            ew: Lights;
-        };
-    };
+    state: RecordingState;
 };
 
 const carWidthPercent = 8.5;
@@ -48,37 +34,42 @@ const carHeightPercent = 8.5;
 const topPercent_N = 27.5;
 const topPercent_S = 68.5;
 const leftPercent_E = 67;
-const leftPercent_W = 17.3;
+const leftPercent_W = 26;
 
 export default function Display({ state }: ScreenProps) {
     return (
         <div
-            className={"relative w-[1000px] rounded-xs select-none"}
+            className="relative max-w-[98vh] rounded-xs select-none"
             onMouseDown={(e) => e.preventDefault()}
         >
             <img src={intersectionImgPath} />
 
             <TrafficLights
                 label="NORTH"
-                lights={state.lights.ns}
+                lights={state.data.lights.ns}
                 topPercent={14}
                 leftPercent={19}
             />
             <TrafficLights
                 label="SOUTH"
-                lights={state.lights.ns}
+                lights={state.data.lights.ns}
                 topPercent={64}
                 leftPercent={61}
             />
-            <TrafficLights label="EAST" lights={state.lights.ew} topPercent={20} leftPercent={67} />
+            <TrafficLights
+                label="EAST"
+                lights={state.data.lights.ew}
+                topPercent={20}
+                leftPercent={67}
+            />
             <TrafficLights
                 label="WEST"
-                lights={state.lights.ew}
+                lights={state.data.lights.ew}
                 topPercent={60.5}
                 leftPercent={15}
             />
 
-            {state.cars.n_sr.map((car, i) => (
+            {state.data.cars.n_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_N - i * carHeightPercent}
@@ -87,7 +78,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.cars.n_l.map((car, i) => (
+            {state.data.cars.n_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_N - i * carHeightPercent}
@@ -96,7 +87,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.cars.s_sr.map((car, i) => (
+            {state.data.cars.s_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_S + i * carHeightPercent}
@@ -105,7 +96,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.cars.s_l.map((car, i) => (
+            {state.data.cars.s_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_S + i * carHeightPercent}
@@ -114,7 +105,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.cars.e_sr.map((car, i) => (
+            {state.data.cars.e_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={40.8}
@@ -123,7 +114,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.cars.e_l.map((car, i) => (
+            {state.data.cars.e_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={45.7}
@@ -132,20 +123,20 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.cars.w_sr.map((car, i) => (
+            {state.data.cars.w_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={55.5}
-                    leftPercent={leftPercent_W + i * carWidthPercent}
+                    leftPercent={leftPercent_W - i * carWidthPercent}
                     rotation={0}
                     car={car}
                 />
             ))}
-            {state.cars.w_l.map((car, i) => (
+            {state.data.cars.w_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={50.6}
-                    leftPercent={leftPercent_W + i * carWidthPercent}
+                    leftPercent={leftPercent_W - i * carWidthPercent}
                     rotation={0}
                     car={car}
                 />
@@ -228,7 +219,7 @@ function CarImg(props: CarImgProps) {
                 className="absolute top-[7%] left-[30%] text-center font-mono font-bold text-white"
                 style={{ rotate: -props.rotation + "deg", fontSize: divWidth * 0.3 }}
             >
-                {props.car.end.at(0)!.toUpperCase()}
+                {props.car.endRoad.at(0)!.toUpperCase()}
             </p>
             <img src={carImgPath} />
         </div>

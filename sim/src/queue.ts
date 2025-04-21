@@ -53,4 +53,17 @@ export class Queue<T> {
     getCount(): number {
         return this.count;
     }
+
+    /** Only use for getting detailed state data for simulation playback */
+    getAll(): T[] {
+        const items: T[] = [];
+        let current = this.head;
+
+        while (current) {
+            items.push(current.data);
+            current = current.next;
+        }
+
+        return items;
+    }
 }

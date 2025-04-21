@@ -1,45 +1,80 @@
+import { Recording, RecordingSchema, RecordingState as RecordingStep } from "@/types";
 import Controls from "./Controls";
 import Display from "./Display";
+import { useState } from "react";
+
+const defaultState: RecordingStep = {
+    stepType: "addVehicle",
+    data: {
+        lights: {
+            ns: {
+                sr: "red",
+                l: "red",
+                ped: "red",
+                cond: "red",
+            },
+            ew: {
+                sr: "red",
+                l: "red",
+                ped: "red",
+                cond: "red",
+            },
+        },
+        cars: {
+            n_sr: [],
+            n_l: [],
+            s_sr: [],
+            s_l: [],
+            e_sr: [],
+            e_l: [],
+            w_sr: [],
+            w_l: [],
+        },
+    },
+};
 
 export default function App() {
-    // const [states, setStates] = useState<State[]>([]);
+    const [states, setStates] = useState<RecordingStep[]>([]);
+    const [currentStateIndex, setCurrentStateIndex] = useState(0);
+
     return (
-        <div className="m-2 flex w-full gap-4">
-            <Display
-                state={{
-                    cars: {
-                        n_sr: [{ end: "south" }, { end: "south" }],
-                        n_l: [{ end: "east" }, { end: "east" }],
-                        s_sr: [{ id: "ID", end: "north" }, { end: "north" }],
-                        s_l: [{ end: "west" }, { end: "west" }],
-                        e_sr: [{ end: "west" }, { end: "west" }],
-                        e_l: [{ end: "south" }, { end: "south" }],
-                        w_sr: [{ end: "east" }, { end: "east" }],
-                        w_l: [{ end: "north" }, { end: "north" }],
-                    },
-                    lights: {
-                        ns: {
-                            sr: "green",
-                            l: "red",
-                            ped: "red",
-                            cond: "red",
-                        },
-                        ew: {
-                            sr: "red",
-                            l: "red",
-                            ped: "green",
-                            cond: "green",
-                        },
-                    },
-                }}
-            />
+        <div className="m-2 flex w-full gap-12">
+            <Display state={states[currentStateIndex] ?? defaultState} />
 
             <Controls
                 onNext={() => {
-                    console.log("next");
-                    return false;
+                    if (currentStateIndex + 1 < states.length) {
+                        setCurrentStateIndex(currentStateIndex + 1);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }}
-                onPrevious={() => console.log("previous")}
+                onPrevious={() => {
+                    if (currentStateIndex - 1 >= 0) {
+                        setCurrentStateIndex(currentStateIndex - 1);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }}
+                onFileChanged={async (file) => {
+                    const text = await file.text();
+                    const json = JSON.parse(text);
+
+                    let recording: Recording;
+                    try {
+                        recording = RecordingSchema.parse(json);
+                        setStates(recording.steps);
+                        console.log(recording.steps);
+                    } catch (e) {
+                        alert("Error parsing file:\n" + e);
+                        return;
+                    }
+                }}
+                firstState={states.length > 0 && currentStateIndex == 0}
+                lastState={states.length > 0 && currentStateIndex == states.length - 1}
+                disable={states.length == 0}
             />
         </div>
     );

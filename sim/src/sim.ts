@@ -1,14 +1,14 @@
-import { Config, Road, StateConfig, StateName } from "./io.js";
+import { Config, Road, StateConfig, StateName, RecordingStepData } from "./io.js";
 import { log } from "./log.js";
 import { Queue } from "./queue.js";
 
-type Vehicle = {
+export type Vehicle = {
     id: string;
     endRoad: Road;
 };
 
 type Light = "red" | "green";
-type LightState = {
+export type LightState = {
     /** Straight & Right */
     sr: Light;
     /** Left */
@@ -271,6 +271,25 @@ export class Sim {
         log("leftVehicles", leftVehicles, "\n");
 
         return leftVehicles;
+    }
+
+    getStateData(): RecordingStepData {
+        return {
+            lights: {
+                ns: this.state.output.ns,
+                ew: this.state.output.ew,
+            },
+            cars: {
+                n_sr: this.northSR.getAll(),
+                n_l: this.northL.getAll(),
+                s_sr: this.southSR.getAll(),
+                s_l: this.southL.getAll(),
+                e_sr: this.eastSR.getAll(),
+                e_l: this.eastL.getAll(),
+                w_sr: this.westSR.getAll(),
+                w_l: this.westL.getAll(),
+            },
+        };
     }
 
     /**
