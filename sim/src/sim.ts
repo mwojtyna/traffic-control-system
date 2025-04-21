@@ -132,18 +132,27 @@ export class Sim {
     }
 
     pedestrianRequest(road: Road): void {
+        // Only allow pedestrian requests when their light is red
         switch (road) {
             case "north":
-                this.pedRequestN = true;
+                if (this.state.output.ns.ped == "red") {
+                    this.pedRequestN = true;
+                }
                 break;
             case "south":
-                this.pedRequestS = true;
+                if (this.state.output.ns.ped == "red") {
+                    this.pedRequestS = true;
+                }
                 break;
             case "east":
-                this.pedRequestE = true;
+                if (this.state.output.ew.ped == "red") {
+                    this.pedRequestE = true;
+                }
                 break;
             case "west":
-                this.pedRequestW = true;
+                if (this.state.output.ew.ped == "red") {
+                    this.pedRequestW = true;
+                }
                 break;
         }
     }
@@ -270,7 +279,7 @@ export class Sim {
             this.state = this.states[this.state.nextStateIndex];
             this.timer = 0;
 
-            // Reset pedestrian requests
+            // Reset pedestrian requests when lights change
             switch (this.state.name) {
                 case "NS_SR":
                     this.pedRequestE = false;

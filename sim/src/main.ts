@@ -25,9 +25,9 @@ log("input", input);
 // Simulate
 const defaultConfig: Config = {
     states: {
-        NS_SR: { greenMin: 0, greenMax: 5, ratio: 3 / 2 },
+        NS_SR: { greenMin: 1, greenMax: 5, ratio: 3 / 2 },
         NS_L: { greenMin: 0, greenMax: 3, ratio: 3 / 2 },
-        EW_SR: { greenMin: 0, greenMax: 5, ratio: 3 / 2 },
+        EW_SR: { greenMin: 1, greenMax: 5, ratio: 3 / 2 },
         EW_L: { greenMin: 0, greenMax: 3, ratio: 3 / 2 },
     },
 };
