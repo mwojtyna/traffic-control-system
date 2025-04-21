@@ -9,7 +9,6 @@ import condRedImgPath from "@/../assets/cond_red.png?url";
 import pedGreenImgPath from "@/../assets/ped_green.png?url";
 import pedRedImgPath from "@/../assets/ped_red.png?url";
 import pedRequestImgPath from "@/../assets/ped_request.png?url";
-import { useRef } from "react";
 import { StateSnapshot } from "@/types";
 
 type Route = "north" | "south" | "west" | "east";
@@ -176,6 +175,7 @@ function TrafficLights(props: TrafficLightProps) {
                         className="absolute top-[22%] left-[10%]"
                         src={pedRequestImgPath}
                         width="5%"
+                        title="Pedestrian pressed the crossing button"
                     />
                 )}
                 <img
@@ -201,8 +201,6 @@ type CarImgProps = {
 };
 
 function CarImg(props: CarImgProps) {
-    const hueRotation = useRef(Math.random() * 360);
-
     return (
         <div
             className="absolute w-[7.5%]"
@@ -219,12 +217,7 @@ function CarImg(props: CarImgProps) {
             >
                 {props.car.endRoad.at(0)!.toUpperCase()}
             </p>
-            <img
-                src={carImgPath}
-                style={{
-                    filter: `hue-rotate(${hueRotation.current}deg)`,
-                }}
-            />
+            <img src={carImgPath} />
         </div>
     );
 }
