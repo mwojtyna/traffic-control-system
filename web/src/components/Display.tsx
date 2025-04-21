@@ -1,24 +1,45 @@
-import intersectionImgPath from "@/assets/intersection.png?url";
-import carImgPath from "@/assets/car.webp?url";
+import intersectionImgPath from "@/../assets/intersection.png?url";
+import carImgPath from "@/../assets/car.webp?url";
+import srGreenImgPath from "@/../assets/sr_green.png?url";
+import srRedImgPath from "@/../assets/sr_red.png?url";
+import lGreenImgPath from "@/../assets/l_green.png?url";
+import lRedImgPath from "@/../assets/l_red.png?url";
+import condGreenImgPath from "@/../assets/cond_green.png?url";
+import condRedImgPath from "@/../assets/cond_red.png?url";
+import pedGreenImgPath from "@/../assets/ped_green.png?url";
+import pedRedImgPath from "@/../assets/ped_red.png?url";
 import { useEffect, useRef, useState } from "react";
 
 type Route = "north" | "south" | "west" | "east";
+type Light = "red" | "green";
 
 type Car = {
     id: string;
     end: Route;
 };
 
+type Lights = {
+    sr: Light;
+    l: Light;
+    ped: Light;
+    cond: Light;
+};
 type ScreenProps = {
     state: {
-        N_SR: Car[];
-        N_L: Car[];
-        S_SR: Car[];
-        S_L: Car[];
-        E_SR: Car[];
-        E_L: Car[];
-        W_SR: Car[];
-        W_L: Car[];
+        cars: {
+            n_sr: Car[];
+            n_l: Car[];
+            s_sr: Car[];
+            s_l: Car[];
+            e_sr: Car[];
+            e_l: Car[];
+            w_sr: Car[];
+            w_l: Car[];
+        };
+        lights: {
+            ns: Lights;
+            ew: Lights;
+        };
     };
 };
 
@@ -37,7 +58,27 @@ export default function Display({ state }: ScreenProps) {
         >
             <img src={intersectionImgPath} />
 
-            {state.N_SR.map((car, i) => (
+            <TrafficLights
+                label="NORTH"
+                lights={state.lights.ns}
+                topPercent={14}
+                leftPercent={19}
+            />
+            <TrafficLights
+                label="SOUTH"
+                lights={state.lights.ns}
+                topPercent={64}
+                leftPercent={61}
+            />
+            <TrafficLights label="EAST" lights={state.lights.ew} topPercent={20} leftPercent={67} />
+            <TrafficLights
+                label="WEST"
+                lights={state.lights.ew}
+                topPercent={60.5}
+                leftPercent={15}
+            />
+
+            {state.cars.n_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_N - i * carHeightPercent}
@@ -46,7 +87,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.N_L.map((car, i) => (
+            {state.cars.n_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_N - i * carHeightPercent}
@@ -55,7 +96,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.S_SR.map((car, i) => (
+            {state.cars.s_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_S + i * carHeightPercent}
@@ -64,7 +105,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.S_L.map((car, i) => (
+            {state.cars.s_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={topPercent_S + i * carHeightPercent}
@@ -73,7 +114,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.E_SR.map((car, i) => (
+            {state.cars.e_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={40.8}
@@ -82,7 +123,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.E_L.map((car, i) => (
+            {state.cars.e_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={45.7}
@@ -91,7 +132,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.W_SR.map((car, i) => (
+            {state.cars.w_sr.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={55.5}
@@ -100,7 +141,7 @@ export default function Display({ state }: ScreenProps) {
                     car={car}
                 />
             ))}
-            {state.W_L.map((car, i) => (
+            {state.cars.w_l.map((car, i) => (
                 <CarImg
                     key={i}
                     topPercent={50.6}
@@ -113,12 +154,47 @@ export default function Display({ state }: ScreenProps) {
     );
 }
 
+type TrafficLightProps = {
+    lights: Lights;
+    topPercent: number;
+    leftPercent: number;
+    label: string;
+};
+
+function TrafficLights(props: TrafficLightProps) {
+    return (
+        <div
+            className="absolute"
+            style={{
+                top: props.topPercent + "%",
+                left: props.leftPercent + "%",
+                width: "20%",
+            }}
+        >
+            <p className="text-center text-2xl font-bold text-white">{props.label}</p>
+            <div className="grid grid-flow-col gap-1">
+                <img
+                    className="mt-auto"
+                    src={props.lights.ped === "red" ? pedRedImgPath : pedGreenImgPath}
+                />
+                <img src={props.lights.l === "red" ? lRedImgPath : lGreenImgPath} />
+                <img src={props.lights.sr === "red" ? srRedImgPath : srGreenImgPath} />
+                <img
+                    className="mt-auto"
+                    src={props.lights.cond === "red" ? condRedImgPath : condGreenImgPath}
+                />
+            </div>
+        </div>
+    );
+}
+
 type CarImgProps = {
     topPercent: number;
     leftPercent: number;
     rotation: number;
     car: Car;
 };
+
 function CarImg(props: CarImgProps) {
     const divRef = useRef<HTMLDivElement>(null);
     const pRef = useRef<HTMLParagraphElement>(null);
@@ -139,7 +215,7 @@ function CarImg(props: CarImgProps) {
     return (
         <div
             ref={divRef}
-            className="absolute z-[1] w-[7.5%]"
+            className="absolute w-[7.5%]"
             title={props.car.id}
             style={{
                 top: props.topPercent + "%",

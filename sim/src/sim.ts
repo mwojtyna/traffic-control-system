@@ -95,38 +95,34 @@ export class Sim {
     }
 
     addVehicle(v: Vehicle, startRoad: Road): void {
-        if (v.endRoad == startRoad) {
-            error(`Vehicle ${v.id} cannot end on the same road it started on`);
-            return;
-        }
-
         // Assign vehicle to the correct lane
+        // Also simulates U-turns
         switch (startRoad) {
             case "north":
                 if (v.endRoad == "south" || v.endRoad == "west") {
                     this.northSR.enqueue(v);
-                } else {
+                } else if (v.endRoad == "north" || v.endRoad == "east") {
                     this.northL.enqueue(v);
                 }
                 break;
             case "south":
                 if (v.endRoad == "north" || v.endRoad == "east") {
                     this.southSR.enqueue(v);
-                } else {
+                } else if (v.endRoad == "south" || v.endRoad == "west") {
                     this.southL.enqueue(v);
                 }
                 break;
             case "east":
                 if (v.endRoad == "west" || v.endRoad == "north") {
                     this.eastSR.enqueue(v);
-                } else {
+                } else if (v.endRoad == "east" || v.endRoad == "south") {
                     this.eastL.enqueue(v);
                 }
                 break;
             case "west":
                 if (v.endRoad == "east" || v.endRoad == "south") {
                     this.westSR.enqueue(v);
-                } else {
+                } else if (v.endRoad == "west" || v.endRoad == "north") {
                     this.westL.enqueue(v);
                 }
                 break;
