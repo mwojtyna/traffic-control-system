@@ -30,6 +30,10 @@ const defaultState: StateSnapshot = {
             w_sr: [],
             w_l: [],
         },
+        pedestrianRequestN: false,
+        pedestrianRequestS: false,
+        pedestrianRequestE: false,
+        pedestrianRequestW: false,
     },
 };
 
@@ -87,6 +91,7 @@ export default function App() {
                           }
                         : null
                 }
+                commandCount={states.length}
             />
         </div>
     );

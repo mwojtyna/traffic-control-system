@@ -76,6 +76,10 @@ export type StateSnapshot = {
         w_sr: Vehicle[];
         w_l: Vehicle[];
     };
+    pedestrianRequestN: boolean;
+    pedestrianRequestS: boolean;
+    pedestrianRequestE: boolean;
+    pedestrianRequestW: boolean;
 };
 export type SimRecording = {
     commands: { type: CommandType; data: StateSnapshot }[];

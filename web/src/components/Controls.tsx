@@ -9,9 +9,10 @@ type ControlsProps = {
     lastState: boolean;
     disable: boolean;
     command: {
-        type: StateSnapshot["stepType"];
+        type: StateSnapshot["type"];
         index: number;
     } | null;
+    commandCount: number;
 };
 
 export default function Controls({ onFileChanged, ...props }: ControlsProps) {
@@ -64,10 +65,16 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
             </div>
 
             <div className="flex flex-col gap-1">
-                <label className="text-xl font-bold">Command details</label>
+                <label className="text-xl font-bold">
+                    Command details{" "}
+                    {props.command && (
+                        <>
+                            ({props.command.index + 1}/{props.commandCount})
+                        </>
+                    )}
+                </label>
                 <pre>
                     <p>type: {props.command?.type ?? "N/A"}</p>
-                    <p>index: {props.command?.index ?? "N/A"}</p>
                 </pre>
             </div>
         </div>

@@ -8,6 +8,7 @@ import condGreenImgPath from "@/../assets/cond_green.png?url";
 import condRedImgPath from "@/../assets/cond_red.png?url";
 import pedGreenImgPath from "@/../assets/ped_green.png?url";
 import pedRedImgPath from "@/../assets/ped_red.png?url";
+import pedRequestImgPath from "@/../assets/ped_request.png?url";
 import { useEffect, useRef, useState } from "react";
 import { StateSnapshot } from "@/types";
 
@@ -39,7 +40,7 @@ const leftPercent_W = 26;
 export default function Display({ state }: ScreenProps) {
     return (
         <div
-            className="relative max-w-[98vh] rounded-xs select-none"
+            className="relative max-w-[98vh] min-w-[98vh] rounded-xs select-none"
             onMouseDown={(e) => e.preventDefault()}
             onContextMenu={(e) => e.preventDefault()}
         >
@@ -50,24 +51,28 @@ export default function Display({ state }: ScreenProps) {
                 lights={state.data.lights.ns}
                 topPercent={14}
                 leftPercent={19}
+                pedestrianRequest={state.data.pedestrianRequestN}
             />
             <TrafficLights
                 label="south"
                 lights={state.data.lights.ns}
                 topPercent={64}
                 leftPercent={61}
+                pedestrianRequest={state.data.pedestrianRequestS}
             />
             <TrafficLights
                 label="east"
                 lights={state.data.lights.ew}
                 topPercent={20}
                 leftPercent={67}
+                pedestrianRequest={state.data.pedestrianRequestE}
             />
             <TrafficLights
                 label="west"
                 lights={state.data.lights.ew}
                 topPercent={60.5}
                 leftPercent={15}
+                pedestrianRequest={state.data.pedestrianRequestW}
             />
 
             {state.data.cars.n_sr.map((car, i) => (
@@ -151,6 +156,7 @@ type TrafficLightProps = {
     lights: Lights;
     topPercent: number;
     leftPercent: number;
+    pedestrianRequest: boolean;
 };
 
 function TrafficLights(props: TrafficLightProps) {
@@ -165,6 +171,13 @@ function TrafficLights(props: TrafficLightProps) {
         >
             <p className="text-center text-2xl font-bold text-white">{props.label}</p>
             <div className="grid grid-flow-col gap-1">
+                {props.pedestrianRequest && (
+                    <img
+                        className="absolute top-[22%] left-[10%]"
+                        src={pedRequestImgPath}
+                        width="5%"
+                    />
+                )}
                 <img
                     className="mt-auto"
                     src={props.lights.ped === "red" ? pedRedImgPath : pedGreenImgPath}

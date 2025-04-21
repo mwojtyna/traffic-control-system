@@ -28,6 +28,10 @@ const StateSnapshotSchema = z.object({
         w_sr: z.array(VehicleSchema),
         w_l: z.array(VehicleSchema),
     }),
+    pedestrianRequestN: z.boolean(),
+    pedestrianRequestS: z.boolean(),
+    pedestrianRequestE: z.boolean(),
+    pedestrianRequestW: z.boolean(),
 });
 
 export const RecordingSchema = z.object({

@@ -49,8 +49,10 @@ export class Sim {
     private readonly eastL = new Queue<Vehicle>();
     private readonly westSR = new Queue<Vehicle>();
     private readonly westL = new Queue<Vehicle>();
-    private pedRequestNS = false;
-    private pedRequestEW = false;
+    private pedRequestN = false;
+    private pedRequestS = false;
+    private pedRequestE = false;
+    private pedRequestW = false;
 
     constructor(config: Config) {
         this.states = [
@@ -130,10 +132,19 @@ export class Sim {
     }
 
     pedestrianRequest(road: Road): void {
-        if (road == "north" || road == "south") {
-            this.pedRequestNS = true;
-        } else if (road == "east" || road == "west") {
-            this.pedRequestEW = true;
+        switch (road) {
+            case "north":
+                this.pedRequestN = true;
+                break;
+            case "south":
+                this.pedRequestS = true;
+                break;
+            case "east":
+                this.pedRequestE = true;
+                break;
+            case "west":
+                this.pedRequestW = true;
+                break;
         }
     }
 
@@ -144,8 +155,10 @@ export class Sim {
         log("STEP:");
         log("state", this.state);
         log("timer", this.timer);
-        log("pedRequestNS", this.pedRequestNS);
-        log("pedRequestEW", this.pedRequestEW);
+        log("pedRequestN", this.pedRequestN);
+        log("pedRequestS", this.pedRequestS);
+        log("pedRequestE", this.pedRequestE);
+        log("pedRequestW", this.pedRequestW);
 
         const leftVehicles: Vehicle[] = [];
 
@@ -178,9 +191,6 @@ export class Sim {
                 leftVehicles.push(this.northSR.dequeue()!);
             }
         }
-        if (this.state.output.ns.ped == "green") {
-            // TODO: For visualization?
-        }
 
         // Dequeue vehicles EW
         if (this.state.output.ew.sr == "green") {
@@ -211,9 +221,6 @@ export class Sim {
                 leftVehicles.push(this.westSR.dequeue()!);
             }
         }
-        if (this.state.output.ew.ped == "green") {
-            // TODO: For visualization?
-        }
 
         const carsNS_SR = this.northSR.getCount() + this.southSR.getCount();
         const carsNS_L = this.northL.getCount() + this.southL.getCount();
@@ -224,13 +231,12 @@ export class Sim {
         let changeState = false;
         switch (this.state.name) {
             case "NS_SR":
-                this.pedRequestEW = false;
                 if (
                     this.shouldEndStateSR(
                         carsNS_SR > 0 ? carsEW_SR / carsNS_SR : this.state.prefs.ratio,
                         carsNS_SR,
                         carsNS_L,
-                        this.pedRequestNS,
+                        this.pedRequestN || this.pedRequestS,
                     )
                 ) {
                     changeState = true;
@@ -242,13 +248,12 @@ export class Sim {
                 }
                 break;
             case "EW_SR":
-                this.pedRequestNS = false;
                 if (
                     this.shouldEndStateSR(
                         carsEW_SR > 0 ? carsNS_SR / carsEW_SR : this.state.prefs.ratio,
                         carsEW_SR,
                         carsEW_L,
-                        this.pedRequestEW,
+                        this.pedRequestE || this.pedRequestW,
                     )
                 ) {
                     changeState = true;
@@ -264,6 +269,18 @@ export class Sim {
         if (changeState) {
             this.state = this.states[this.state.nextStateIndex];
             this.timer = 0;
+
+            // Reset pedestrian requests
+            switch (this.state.name) {
+                case "NS_SR":
+                    this.pedRequestE = false;
+                    this.pedRequestW = false;
+                    break;
+                case "EW_SR":
+                    this.pedRequestN = false;
+                    this.pedRequestS = false;
+                    break;
+            }
         } else {
             this.timer++;
         }
@@ -289,6 +306,10 @@ export class Sim {
                 w_sr: this.westSR.getAll(),
                 w_l: this.westL.getAll(),
             },
+            pedestrianRequestN: this.pedRequestN,
+            pedestrianRequestS: this.pedRequestS,
+            pedestrianRequestE: this.pedRequestE,
+            pedestrianRequestW: this.pedRequestW,
         };
     }
 
