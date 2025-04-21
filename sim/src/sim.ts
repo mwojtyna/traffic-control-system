@@ -1,10 +1,10 @@
-import { Config, Road, StateConfig, StateName, StateSnapshot } from "./io.js";
+import { Config, Direction, StateConfig, StateName, StateSnapshot } from "./io.js";
 import { log } from "./log.js";
 import { Queue } from "./queue.js";
 
 export type Vehicle = {
     id: string;
-    endRoad: Road;
+    endRoad: Direction;
 };
 
 type Light = "red" | "green";
@@ -96,7 +96,7 @@ export class Sim {
         this.state = this.states[0];
     }
 
-    addVehicle(v: Vehicle, startRoad: Road): void {
+    addVehicle(v: Vehicle, startRoad: Direction): void {
         // Assign vehicle to the correct lane
         // Also simulates U-turns
         switch (startRoad) {
@@ -131,9 +131,9 @@ export class Sim {
         }
     }
 
-    pedestrianRequest(road: Road): void {
+    pedestrianRequest(crossing: Direction): void {
         // Only allow pedestrian requests when their light is red
-        switch (road) {
+        switch (crossing) {
             case "north":
                 if (this.state.output.ns.ped == "red") {
                     this.pedRequestN = true;

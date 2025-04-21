@@ -21,20 +21,20 @@ const ConfigSchema = z.object({
 });
 
 // Command
-const RoadSchema = z.enum(["north", "east", "south", "west"]);
+const DirectionSchema = z.enum(["north", "east", "south", "west"]);
 const CommandSchema = z.union([
     z.object({
         type: z.literal("addVehicle"),
         vehicleId: z.string(),
-        startRoad: RoadSchema,
-        endRoad: RoadSchema,
+        startRoad: DirectionSchema,
+        endRoad: DirectionSchema,
     }),
     z.object({
         type: z.literal("step"),
     }),
     z.object({
         type: z.literal("pedestrianRequest"),
-        road: RoadSchema,
+        crossing: DirectionSchema,
     }),
 ]);
 
@@ -47,7 +47,7 @@ const InputSchema = z.object({
 export type StateConfig = z.infer<typeof StateConfigSchema>;
 export type StateName = z.infer<typeof StateNameSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
-export type Road = z.infer<typeof RoadSchema>;
+export type Direction = z.infer<typeof DirectionSchema>;
 export type Command = z.infer<typeof CommandSchema>;
 export type CommandType = Command["type"];
 export type Input = z.infer<typeof InputSchema>;
