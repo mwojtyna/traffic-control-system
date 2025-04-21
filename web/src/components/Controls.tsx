@@ -1,3 +1,4 @@
+import { StateSnapshot } from "@/types";
 import { useEffect, useRef } from "react";
 
 type ControlsProps = {
@@ -7,6 +8,10 @@ type ControlsProps = {
     firstState: boolean;
     lastState: boolean;
     disable: boolean;
+    command: {
+        type: StateSnapshot["stepType"];
+        index: number;
+    } | null;
 };
 
 export default function Controls({ onFileChanged, ...props }: ControlsProps) {
@@ -48,7 +53,7 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
                     >
                         Previous
                     </ControlButton>
-                    <ControlButton disabled={props.disable}>Play/Pause</ControlButton>
+                    {/* <ControlButton disabled={props.disable}>Play/Pause</ControlButton> */}
                     <ControlButton
                         onClick={props.onNext}
                         disabled={props.lastState || props.disable}
@@ -56,6 +61,14 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
                         Next
                     </ControlButton>
                 </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+                <label className="text-xl font-bold">Command details</label>
+                <pre>
+                    <p>type: {props.command?.type ?? "N/A"}</p>
+                    <p>index: {props.command?.index ?? "N/A"}</p>
+                </pre>
             </div>
         </div>
     );

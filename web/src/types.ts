@@ -13,7 +13,7 @@ const LightStateSchema = z.object({
     cond: LightSchema,
 });
 
-const StateDataSchema = z.object({
+const StateSnapshotSchema = z.object({
     lights: z.object({
         ns: LightStateSchema,
         ew: LightStateSchema,
@@ -31,14 +31,14 @@ const StateDataSchema = z.object({
 });
 
 export const RecordingSchema = z.object({
-    steps: z.array(
+    commands: z.array(
         z.object({
-            stepType: z.enum(["addVehicle", "pedestrianRequest", "step"]),
-            data: StateDataSchema,
+            type: z.enum(["addVehicle", "pedestrianRequest", "step"]),
+            data: StateSnapshotSchema,
         }),
     ),
 });
 
 export type Recording = z.infer<typeof RecordingSchema>;
 
-export type RecordingState = z.infer<typeof RecordingSchema>["steps"][number];
+export type StateSnapshot = z.infer<typeof RecordingSchema>["commands"][number];

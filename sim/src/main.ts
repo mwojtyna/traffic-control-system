@@ -1,5 +1,5 @@
 import { exit } from "node:process";
-import { Config, Input, Output, readInput, SimRecording, writeOutput as writeFile } from "./io.js";
+import { Config, Input, Output, readInput, SimRecording, writeOutput } from "./io.js";
 import { Sim } from "./sim.js";
 import { fatal, log } from "./log.js";
 
@@ -34,7 +34,7 @@ const defaultConfig: Config = {
 const sim = new Sim(input.config ?? defaultConfig);
 
 const output: Output = { stepStatuses: [] };
-const recording: SimRecording = { steps: [] };
+const recording: SimRecording = { commands: [] };
 
 for (const command of input.commands) {
     switch (command.type) {
@@ -50,8 +50,8 @@ for (const command of input.commands) {
             break;
     }
     if (recordingFileName !== undefined) {
-        recording.steps.push({
-            stepType: command.type,
+        recording.commands.push({
+            type: command.type,
             data: sim.getStateData(),
         });
     }
@@ -59,7 +59,7 @@ for (const command of input.commands) {
 
 // Write outputs
 try {
-    await writeFile(outputFileName, output);
+    await writeOutput(outputFileName, output);
 } catch (e) {
     fatal(`Error writing to file: "${e}"`);
     exit(1);
@@ -67,7 +67,7 @@ try {
 
 if (recordingFileName !== undefined) {
     try {
-        await writeFile(recordingFileName, recording);
+        await writeOutput(recordingFileName, recording);
     } catch (e) {
         fatal(`Error writing to file: "${e}"`);
         exit(1);

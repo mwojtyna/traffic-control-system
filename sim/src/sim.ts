@@ -1,4 +1,4 @@
-import { Config, Road, StateConfig, StateName, RecordingStepData } from "./io.js";
+import { Config, Road, StateConfig, StateName, StateSnapshot } from "./io.js";
 import { log } from "./log.js";
 import { Queue } from "./queue.js";
 
@@ -273,7 +273,7 @@ export class Sim {
         return leftVehicles;
     }
 
-    getStateData(): RecordingStepData {
+    getStateData(): StateSnapshot {
         return {
             lights: {
                 ns: this.state.output.ns,

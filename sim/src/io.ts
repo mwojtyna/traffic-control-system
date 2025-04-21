@@ -61,7 +61,7 @@ export type Output = {
 };
 
 // Recording
-export type RecordingStepData = {
+export type StateSnapshot = {
     lights: {
         ns: LightState;
         ew: LightState;
@@ -78,7 +78,7 @@ export type RecordingStepData = {
     };
 };
 export type SimRecording = {
-    steps: { stepType: CommandType; data: RecordingStepData }[];
+    commands: { type: CommandType; data: StateSnapshot }[];
 };
 
 export async function readInput(fileName: string): Promise<Input> {

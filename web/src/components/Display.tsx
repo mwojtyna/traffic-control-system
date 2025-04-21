@@ -9,7 +9,7 @@ import condRedImgPath from "@/../assets/cond_red.png?url";
 import pedGreenImgPath from "@/../assets/ped_green.png?url";
 import pedRedImgPath from "@/../assets/ped_red.png?url";
 import { useEffect, useRef, useState } from "react";
-import { RecordingState } from "@/types";
+import { StateSnapshot } from "@/types";
 
 type Route = "north" | "south" | "west" | "east";
 type Light = "red" | "green";
@@ -26,7 +26,7 @@ type Lights = {
     cond: Light;
 };
 type ScreenProps = {
-    state: RecordingState;
+    state: StateSnapshot;
 };
 
 const carWidthPercent = 8.5;
@@ -41,29 +41,30 @@ export default function Display({ state }: ScreenProps) {
         <div
             className="relative max-w-[98vh] rounded-xs select-none"
             onMouseDown={(e) => e.preventDefault()}
+            onContextMenu={(e) => e.preventDefault()}
         >
             <img src={intersectionImgPath} />
 
             <TrafficLights
-                label="NORTH"
+                label="north"
                 lights={state.data.lights.ns}
                 topPercent={14}
                 leftPercent={19}
             />
             <TrafficLights
-                label="SOUTH"
+                label="south"
                 lights={state.data.lights.ns}
                 topPercent={64}
                 leftPercent={61}
             />
             <TrafficLights
-                label="EAST"
+                label="east"
                 lights={state.data.lights.ew}
                 topPercent={20}
                 leftPercent={67}
             />
             <TrafficLights
-                label="WEST"
+                label="west"
                 lights={state.data.lights.ew}
                 topPercent={60.5}
                 leftPercent={15}
@@ -146,10 +147,10 @@ export default function Display({ state }: ScreenProps) {
 }
 
 type TrafficLightProps = {
+    label: Route;
     lights: Lights;
     topPercent: number;
     leftPercent: number;
-    label: string;
 };
 
 function TrafficLights(props: TrafficLightProps) {
