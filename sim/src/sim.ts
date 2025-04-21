@@ -1,5 +1,5 @@
 import { Config, Road, StateConfig, StateName } from "./io.js";
-import { error, log } from "./log.js";
+import { log } from "./log.js";
 import { Queue } from "./queue.js";
 
 type Vehicle = {
@@ -49,8 +49,8 @@ export class Sim {
     private readonly eastL = new Queue<Vehicle>();
     private readonly westSR = new Queue<Vehicle>();
     private readonly westL = new Queue<Vehicle>();
-    private readonly pedRequestsNS = new Queue<Road>();
-    private readonly pedRequestsEW = new Queue<Road>();
+    private pedRequestNS = false;
+    private pedRequestEW = false;
 
     constructor(config: Config) {
         this.states = [
@@ -131,9 +131,9 @@ export class Sim {
 
     pedestrianRequest(road: Road): void {
         if (road == "north" || road == "south") {
-            this.pedRequestsNS.enqueue(road);
+            this.pedRequestNS = true;
         } else if (road == "east" || road == "west") {
-            this.pedRequestsEW.enqueue(road);
+            this.pedRequestEW = true;
         }
     }
 
@@ -144,8 +144,8 @@ export class Sim {
         log("STEP:");
         log("state", this.state);
         log("timer", this.timer);
-        log("pedRequestsNS", this.pedRequestsNS.getCount());
-        log("pedRequestsEW", this.pedRequestsEW.getCount());
+        log("pedRequestNS", this.pedRequestNS);
+        log("pedRequestEW", this.pedRequestEW);
 
         const leftVehicles: Vehicle[] = [];
 
@@ -221,47 +221,47 @@ export class Sim {
         const carsEW_L = this.eastL.getCount() + this.westL.getCount();
 
         // State transitions
-        let changedState = false;
+        let changeState = false;
         switch (this.state.name) {
             case "NS_SR":
-                this.pedRequestsEW.dequeue();
+                this.pedRequestEW = false;
                 if (
                     this.shouldEndStateSR(
                         carsNS_SR > 0 ? carsEW_SR / carsNS_SR : this.state.prefs.ratio,
                         carsNS_SR,
                         carsNS_L,
-                        this.pedRequestsNS.getCount(),
+                        this.pedRequestNS,
                     )
                 ) {
-                    changedState = true;
+                    changeState = true;
                 }
                 break;
             case "NS_L":
                 if (this.shouldEndStateL(carsNS_L)) {
-                    changedState = true;
+                    changeState = true;
                 }
                 break;
             case "EW_SR":
-                this.pedRequestsNS.dequeue();
+                this.pedRequestNS = false;
                 if (
                     this.shouldEndStateSR(
                         carsEW_SR > 0 ? carsNS_SR / carsEW_SR : this.state.prefs.ratio,
                         carsEW_SR,
                         carsEW_L,
-                        this.pedRequestsEW.getCount(),
+                        this.pedRequestEW,
                     )
                 ) {
-                    changedState = true;
+                    changeState = true;
                 }
                 break;
             case "EW_L":
                 if (this.shouldEndStateL(carsEW_L)) {
-                    changedState = true;
+                    changeState = true;
                 }
                 break;
         }
 
-        if (changedState) {
+        if (changeState) {
             this.state = this.states[this.state.nextStateIndex];
             this.timer = 0;
         } else {
@@ -280,13 +280,11 @@ export class Sim {
         carRatio: number,
         carsSR: number,
         carsL: number,
-        pedRequests: number,
+        pedRequest: boolean,
     ): boolean {
         return (
             (this.timer >= this.state.prefs.greenMin &&
-                (carRatio >= this.state.prefs.ratio ||
-                    (carsSR == 0 && carsL > 0) ||
-                    pedRequests > 0)) ||
+                (carRatio >= this.state.prefs.ratio || (carsSR == 0 && carsL > 0) || pedRequest)) ||
             this.timer >= this.state.prefs.greenMax
         );
     }
