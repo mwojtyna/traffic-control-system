@@ -96,7 +96,7 @@ Aby uruchomić należy w katalogu `sim`:
 > [!IMPORTANT]
 > `optional_recording.json` to opcjonalny argument do programu. Jeżeli występuje, to do niego zostanie wpisany każdy stan symulacji. Następnie ten plik można załadować w aplikacji internetowej do graficznego odtworzenia symulacji.
 
-Dodatkowo można uruchomić testy za pomocą `npm run test` w katalogu `sim`. Zaimplementowałem zarówno testy jednostkowe jak i integracyjne. Testy integracyjne porównują wszystkie stany symulacji z zapisanymi wcześniej w pliku. Dzięki temu wiadomo kiedy nastąpi zmiana powodująca inne działanie algorytmu.
+Dodatkowo można uruchomić testy za pomocą `npm run test` w katalogu `sim`. Zaimplementowałem zarówno testy jednostkowe jak i integracyjne oraz skonfigurowałem workflow w GitHub Actions. Testy integracyjne porównują wszystkie stany symulacji z zapisanymi wcześniej w pliku. Dzięki temu wiadomo kiedy nastąpi zmiana powodująca inne działanie algorytmu.
 
 ### Aplikacja internetowa
 
