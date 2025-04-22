@@ -60,6 +60,10 @@
                         {
                             "id": "n->s-1",
                             "endRoad": "south"
+                        },
+                        {
+                            "id": "n->s-2",
+                            "endRoad": "south"
                         }
                     ],
                     "n_l": [],
@@ -67,12 +71,7 @@
                     "s_l": [],
                     "e_sr": [],
                     "e_l": [],
-                    "w_sr": [
-                        {
-                            "id": "w->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
+                    "w_sr": [],
                     "w_l": []
                 },
                 "pedestrianRequestN": false,
@@ -82,7 +81,53 @@
             }
         },
         {
-            "type": "pedestrianRequest",
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-1",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "n->s-2",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [],
+                    "e_l": [],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
             "data": {
                 "lights": {
                     "ns": {
@@ -103,273 +148,23 @@
                         {
                             "id": "n->s-1",
                             "endRoad": "south"
-                        }
-                    ],
-                    "n_l": [],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [],
-                    "w_sr": [
+                        },
                         {
-                            "id": "w->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "w_l": []
-                },
-                "pedestrianRequestN": true,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "step",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [],
-                    "w_sr": [
+                            "id": "n->s-2",
+                            "endRoad": "south"
+                        },
                         {
-                            "id": "w->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "w_l": []
-                },
-                "pedestrianRequestN": true,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->w-1",
+                            "id": "n->w-1",
                             "endRoad": "west"
                         }
                     ],
-                    "e_l": [],
-                    "w_sr": [
+                    "n_l": [
                         {
-                            "id": "w->e-1",
+                            "id": "n->e-1",
                             "endRoad": "east"
                         }
                     ],
-                    "w_l": []
-                },
-                "pedestrianRequestN": true,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "step",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    },
-                    "ew": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
                     "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "e_l": [],
-                    "w_sr": [
-                        {
-                            "id": "w->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    },
-                    "ew": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "e_l": [],
-                    "w_sr": [
-                        {
-                            "id": "w->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "pedestrianRequest",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    },
-                    "ew": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "e_l": [],
-                    "w_sr": [
-                        {
-                            "id": "w->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": true,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "step",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
                     "s_l": [],
                     "e_sr": [],
                     "e_l": [],
@@ -378,7 +173,54 @@
                 },
                 "pedestrianRequestN": false,
                 "pedestrianRequestS": false,
-                "pedestrianRequestE": true,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-2",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [],
+                    "e_l": [],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
                 "pedestrianRequestW": false
             }
         },
@@ -387,16 +229,186 @@
             "data": {
                 "lights": {
                     "ns": {
-                        "sr": "red",
+                        "sr": "green",
                         "l": "red",
                         "cond": "red",
                         "ped": "red"
                     },
                     "ew": {
                         "sr": "red",
-                        "l": "green",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-2",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->n-1",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "e_l": [],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
                         "cond": "red",
                         "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-2",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->n-1",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-2",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->n-1",
+                            "endRoad": "north"
+                        },
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
                     }
                 },
                 "cars": {
@@ -406,7 +418,65 @@
                             "endRoad": "west"
                         }
                     ],
-                    "n_l": [],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
                     "s_sr": [
                         {
                             "id": "s->n-1",
@@ -414,14 +484,531 @@
                         }
                     ],
                     "s_l": [],
-                    "e_sr": [],
-                    "e_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
                     "w_sr": [],
                     "w_l": []
                 },
                 "pedestrianRequestN": false,
                 "pedestrianRequestS": false,
-                "pedestrianRequestE": true,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [
+                        {
+                            "id": "s->n-1",
+                            "endRoad": "north"
+                        },
+                        {
+                            "id": "s->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [
+                        {
+                            "id": "s->n-1",
+                            "endRoad": "north"
+                        },
+                        {
+                            "id": "s->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "s_l": [
+                        {
+                            "id": "s->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [
+                        {
+                            "id": "s->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "s_l": [
+                        {
+                            "id": "s->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [
+                        {
+                            "id": "s->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "s_l": [
+                        {
+                            "id": "s->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": []
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    }
+                },
+                "cars": {
+                    "n_sr": [],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [
+                        {
+                            "id": "s->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "s_l": [
+                        {
+                            "id": "s->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "green",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [
+                        {
+                            "id": "s->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "green",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [
+                        {
+                            "id": "n->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_sr": [],
+                    "s_l": [
+                        {
+                            "id": "s->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    },
+                    "ew": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
                 "pedestrianRequestW": false
             }
         },
@@ -432,12 +1019,12 @@
                     "ns": {
                         "sr": "red",
                         "l": "red",
-                        "cond": "red",
-                        "ped": "red"
+                        "cond": "green",
+                        "ped": "green"
                     },
                     "ew": {
-                        "sr": "red",
-                        "l": "green",
+                        "sr": "green",
+                        "l": "red",
                         "cond": "red",
                         "ped": "red"
                     }
@@ -445,20 +1032,87 @@
                 "cars": {
                     "n_sr": [
                         {
-                            "id": "n->w-1",
-                            "endRoad": "west"
+                            "id": "n->s-3",
+                            "endRoad": "south"
                         }
                     ],
                     "n_l": [],
-                    "s_sr": [
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [
                         {
-                            "id": "s->n-1",
+                            "id": "e->w-1",
+                            "endRoad": "west"
+                        },
+                        {
+                            "id": "e->n-2",
                             "endRoad": "north"
                         }
                     ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    },
+                    "ew": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [],
                     "s_l": [],
-                    "e_sr": [],
-                    "e_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
                     "w_sr": [],
                     "w_l": [
                         {
@@ -469,7 +1123,223 @@
                 },
                 "pedestrianRequestN": false,
                 "pedestrianRequestS": false,
-                "pedestrianRequestE": true,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "green",
+                        "ped": "green"
+                    },
+                    "ew": {
+                        "sr": "green",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [
+                        {
+                            "id": "s->e-1",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "s_l": [],
+                    "e_sr": [
+                        {
+                            "id": "e->n-2",
+                            "endRoad": "north"
+                        }
+                    ],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "step",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "green",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "green",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
+                "pedestrianRequestW": false
+            }
+        },
+        {
+            "type": "addVehicle",
+            "data": {
+                "lights": {
+                    "ns": {
+                        "sr": "red",
+                        "l": "red",
+                        "cond": "red",
+                        "ped": "red"
+                    },
+                    "ew": {
+                        "sr": "red",
+                        "l": "green",
+                        "cond": "red",
+                        "ped": "red"
+                    }
+                },
+                "cars": {
+                    "n_sr": [
+                        {
+                            "id": "n->s-3",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "n_l": [],
+                    "s_sr": [],
+                    "s_l": [],
+                    "e_sr": [],
+                    "e_l": [
+                        {
+                            "id": "e->s-1",
+                            "endRoad": "south"
+                        }
+                    ],
+                    "w_sr": [
+                        {
+                            "id": "w->s-1",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "w->e-2",
+                            "endRoad": "east"
+                        }
+                    ],
+                    "w_l": [
+                        {
+                            "id": "w->n-1",
+                            "endRoad": "north"
+                        }
+                    ]
+                },
+                "pedestrianRequestN": false,
+                "pedestrianRequestS": false,
+                "pedestrianRequestE": false,
                 "pedestrianRequestW": false
             }
         },
@@ -493,121 +1363,29 @@
                 "cars": {
                     "n_sr": [
                         {
-                            "id": "n->w-1",
-                            "endRoad": "west"
+                            "id": "n->s-3",
+                            "endRoad": "south"
                         }
                     ],
                     "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
+                    "s_sr": [],
                     "s_l": [],
                     "e_sr": [],
                     "e_l": [],
-                    "w_sr": [],
+                    "w_sr": [
+                        {
+                            "id": "w->s-1",
+                            "endRoad": "south"
+                        },
+                        {
+                            "id": "w->e-2",
+                            "endRoad": "east"
+                        }
+                    ],
                     "w_l": []
                 },
                 "pedestrianRequestN": false,
                 "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    }
-                },
-                "cars": {
-                    "n_sr": [
-                        {
-                            "id": "n->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "pedestrianRequest",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    }
-                },
-                "cars": {
-                    "n_sr": [
-                        {
-                            "id": "n->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": true,
                 "pedestrianRequestE": false,
                 "pedestrianRequestW": false
             }
@@ -635,60 +1413,17 @@
                     "s_sr": [],
                     "s_l": [],
                     "e_sr": [],
-                    "e_l": [
+                    "e_l": [],
+                    "w_sr": [
                         {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": true,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->e-1",
+                            "id": "w->e-2",
                             "endRoad": "east"
                         }
                     ],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
                     "w_l": []
                 },
                 "pedestrianRequestN": false,
-                "pedestrianRequestS": true,
+                "pedestrianRequestS": false,
                 "pedestrianRequestE": false,
                 "pedestrianRequestW": false
             }
@@ -713,63 +1448,10 @@
                 "cars": {
                     "n_sr": [],
                     "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
+                    "s_sr": [],
                     "s_l": [],
                     "e_sr": [],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    },
-                    "ew": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [
-                        {
-                            "id": "s->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
+                    "e_l": [],
                     "w_sr": [
                         {
                             "id": "w->e-2",
@@ -807,92 +1489,6 @@
                     "s_sr": [],
                     "s_l": [],
                     "e_sr": [],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
-                    "e_l": [
-                        {
-                            "id": "e->s-1",
-                            "endRoad": "south"
-                        }
-                    ],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "step",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
                     "e_l": [],
                     "w_sr": [],
                     "w_l": []
@@ -901,206 +1497,6 @@
                 "pedestrianRequestS": false,
                 "pedestrianRequestE": false,
                 "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [
-                        {
-                            "id": "n->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [
-                        {
-                            "id": "e->n-1",
-                            "endRoad": "north"
-                        }
-                    ],
-                    "e_l": [],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "step",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [
-                        {
-                            "id": "n->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "addVehicle",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [
-                        {
-                            "id": "n->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "s_sr": [],
-                    "s_l": [
-                        {
-                            "id": "s->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "e_sr": [],
-                    "e_l": [],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": false
-            }
-        },
-        {
-            "type": "pedestrianRequest",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "green",
-                        "cond": "red",
-                        "ped": "red"
-                    },
-                    "ew": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [
-                        {
-                            "id": "n->e-1",
-                            "endRoad": "east"
-                        }
-                    ],
-                    "s_sr": [],
-                    "s_l": [
-                        {
-                            "id": "s->w-1",
-                            "endRoad": "west"
-                        }
-                    ],
-                    "e_sr": [],
-                    "e_l": [],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": true
-            }
-        },
-        {
-            "type": "step",
-            "data": {
-                "lights": {
-                    "ns": {
-                        "sr": "red",
-                        "l": "red",
-                        "cond": "green",
-                        "ped": "green"
-                    },
-                    "ew": {
-                        "sr": "green",
-                        "l": "red",
-                        "cond": "red",
-                        "ped": "red"
-                    }
-                },
-                "cars": {
-                    "n_sr": [],
-                    "n_l": [],
-                    "s_sr": [],
-                    "s_l": [],
-                    "e_sr": [],
-                    "e_l": [],
-                    "w_sr": [],
-                    "w_l": []
-                },
-                "pedestrianRequestN": false,
-                "pedestrianRequestS": false,
-                "pedestrianRequestE": false,
-                "pedestrianRequestW": true
             }
         }
     ]

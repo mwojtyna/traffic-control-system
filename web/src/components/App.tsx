@@ -38,7 +38,7 @@ const defaultState: StateSnapshot = {
 };
 
 export default function App() {
-    const [states, setStates] = useState<StateSnapshot[]>([]);
+    const [states, setStates] = useState<StateSnapshot[]>([defaultState]);
     const [currentStateIndex, setCurrentStateIndex] = useState(0);
 
     async function onFileChanged(file: File) {
@@ -58,7 +58,7 @@ export default function App() {
 
     return (
         <div className="m-2 flex w-full gap-12">
-            <Display state={states[currentStateIndex] ?? defaultState} />
+            <Display state={states[currentStateIndex]} />
 
             <Controls
                 onFileChanged={onFileChanged}

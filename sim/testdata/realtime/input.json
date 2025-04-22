@@ -34,10 +34,6 @@
 
         { "type": "addVehicle", "vehicleId": "s->w-1", "startRoad": "south", "endRoad": "west" },
         { "type": "pedestrianRequest", "crossing": "west" },
-        { "type": "step" },
-
-        { "type": "step" },
-        { "type": "step" },
         { "type": "step" }
     ]
 }

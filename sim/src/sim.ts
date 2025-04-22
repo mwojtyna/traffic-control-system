@@ -240,7 +240,7 @@ export class Sim {
             case "NS_SR":
                 if (
                     this.shouldEndStateSR(
-                        carsNS_SR > 0 ? carsEW_SR / carsNS_SR : this.state.prefs.ratio,
+                        carsNS_SR > 0 ? carsEW_SR / carsNS_SR : Infinity,
                         carsNS_SR + carsEW_SR,
                         carsNS_SR,
                         carsNS_L,
@@ -258,7 +258,7 @@ export class Sim {
             case "EW_SR":
                 if (
                     this.shouldEndStateSR(
-                        carsEW_SR > 0 ? carsNS_SR / carsEW_SR : this.state.prefs.ratio,
+                        carsEW_SR > 0 ? carsNS_SR / carsEW_SR : Infinity,
                         carsNS_SR + carsEW_SR,
                         carsEW_SR,
                         carsEW_L,
