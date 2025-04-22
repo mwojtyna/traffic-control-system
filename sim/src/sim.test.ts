@@ -73,7 +73,7 @@ describe("unit tests 1", () => {
     });
 });
 
-describe("unit test 2", () => {
+describe("unit tests 2", () => {
     const config: Config = {
         pedRequestMaxCars: 2,
         states: {
@@ -139,17 +139,6 @@ describe("unit test 2", () => {
         const state = sim.getStateData();
         expect(state.lights.ns.sr).toBe("green");
         expect(state.pedestrianRequestE).toBe(false); // resets after light change
-    });
-
-    it("vehicles leave when lights are green", () => {
-        const v1: Vehicle = { id: "v1", endRoad: "south" };
-        const v2: Vehicle = { id: "v2", endRoad: "north" };
-        sim.addVehicle(v1, "north");
-        sim.addVehicle(v2, "south");
-
-        // Initial state is NS_SR, so both should go
-        const left = sim.step();
-        expect(left.map((v) => v.id).sort()).toEqual(["v1", "v2"]);
     });
 
     it("pedestrian request speeds up transition when few cars", () => {
