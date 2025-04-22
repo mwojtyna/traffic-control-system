@@ -16,11 +16,9 @@ describe("compare with expected output", () => {
         .readdirSync(casesDir)
         .filter((d) => fs.statSync(path.join(casesDir, d)).isDirectory());
 
+    const config: Config = JSON.parse(fs.readFileSync(path.join(casesDir, "config.json"), "utf-8"));
     for (const dir of testDirs) {
         const testPath = path.join(casesDir, dir);
-        const config: Config = JSON.parse(
-            fs.readFileSync(path.join(testPath, "config.json"), "utf-8"),
-        );
         const inputPath = path.join(testPath, "input.json");
         const expectedPath = path.join(testPath, "expected.json");
 

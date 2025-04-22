@@ -25,10 +25,34 @@ log("input", input);
 // Simulate
 const defaultConfig: Config = {
     states: {
-        NS_SR: { greenMinCarsThreshold: 3, greenMin: 1, greenMax: 5, ratio: 4 / 2 },
-        NS_L: { greenMinCarsThreshold: 3, greenMin: 0, greenMax: 3, ratio: 4 / 2 },
-        EW_SR: { greenMinCarsThreshold: 3, greenMin: 1, greenMax: 5, ratio: 4 / 2 },
-        EW_L: { greenMinCarsThreshold: 3, greenMin: 0, greenMax: 3, ratio: 4 / 2 },
+        NS_SR: {
+            greenMinCarsThreshold: 3,
+            greenMin: 1,
+            greenMax: 5,
+            ratio: 4 / 2,
+            ratioCarsLimit: 5,
+        },
+        NS_L: {
+            greenMinCarsThreshold: 3,
+            greenMin: 0,
+            greenMax: 3,
+            ratio: 4 / 2,
+            ratioCarsLimit: 5,
+        },
+        EW_SR: {
+            greenMinCarsThreshold: 3,
+            greenMin: 1,
+            greenMax: 5,
+            ratio: 4 / 2,
+            ratioCarsLimit: 5,
+        },
+        EW_L: {
+            greenMinCarsThreshold: 3,
+            greenMin: 0,
+            greenMax: 3,
+            ratio: 4 / 2,
+            ratioCarsLimit: 5,
+        },
     },
     pedRequestMaxCars: 4,
 };

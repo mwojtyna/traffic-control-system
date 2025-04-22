@@ -2,17 +2,41 @@ import { it, expect, describe, beforeEach } from "vitest";
 import { Sim, Vehicle } from "./sim.js";
 import { Config } from "./io.js";
 
-const mockConfig: Config = {
-    states: {
-        NS_SR: { greenMin: 0, greenMax: 2, ratio: 1, greenMinCarsThreshold: 0 },
-        NS_L: { greenMin: 0, greenMax: 2, ratio: 1, greenMinCarsThreshold: 0 },
-        EW_SR: { greenMin: 0, greenMax: 2, ratio: 1, greenMinCarsThreshold: 0 },
-        EW_L: { greenMin: 0, greenMax: 2, ratio: 1, greenMinCarsThreshold: 0 },
-    },
-    pedRequestMaxCars: 10,
-};
+describe("unit tests 1", () => {
+    const mockConfig: Config = {
+        states: {
+            NS_SR: {
+                greenMinCarsThreshold: 3,
+                greenMin: 1,
+                greenMax: 5,
+                ratio: 4 / 2,
+                ratioCarsLimit: 5,
+            },
+            NS_L: {
+                greenMinCarsThreshold: 3,
+                greenMin: 1,
+                greenMax: 5,
+                ratio: 4 / 2,
+                ratioCarsLimit: 5,
+            },
+            EW_SR: {
+                greenMinCarsThreshold: 3,
+                greenMin: 1,
+                greenMax: 5,
+                ratio: 4 / 2,
+                ratioCarsLimit: 5,
+            },
+            EW_L: {
+                greenMinCarsThreshold: 3,
+                greenMin: 1,
+                greenMax: 5,
+                ratio: 4 / 2,
+                ratioCarsLimit: 5,
+            },
+        },
+        pedRequestMaxCars: 10,
+    };
 
-describe("unit tests", () => {
     let sim: Sim;
     beforeEach(() => {
         sim = new Sim(mockConfig);
@@ -49,7 +73,7 @@ describe("unit tests", () => {
     });
 });
 
-describe("more complex scenarios", () => {
+describe("unit test 2", () => {
     const config: Config = {
         pedRequestMaxCars: 2,
         states: {
@@ -58,24 +82,28 @@ describe("more complex scenarios", () => {
                 greenMinCarsThreshold: 2,
                 greenMax: 3,
                 ratio: 1,
+                ratioCarsLimit: 5,
             },
             NS_L: {
                 greenMin: 1,
                 greenMinCarsThreshold: 1,
                 greenMax: 3,
                 ratio: 1,
+                ratioCarsLimit: 5,
             },
             EW_SR: {
                 greenMin: 1,
                 greenMinCarsThreshold: 2,
                 greenMax: 3,
                 ratio: 1,
+                ratioCarsLimit: 5,
             },
             EW_L: {
                 greenMin: 1,
                 greenMinCarsThreshold: 1,
                 greenMax: 3,
                 ratio: 1,
+                ratioCarsLimit: 5,
             },
         },
     };

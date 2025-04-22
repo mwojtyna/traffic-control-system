@@ -241,6 +241,7 @@ export class Sim {
                 if (
                     this.shouldEndStateSR(
                         carsNS_SR > 0 ? carsEW_SR / carsNS_SR : this.state.prefs.ratio,
+                        carsNS_SR + carsEW_SR,
                         carsNS_SR,
                         carsNS_L,
                         this.pedRequestN || this.pedRequestS,
@@ -258,6 +259,7 @@ export class Sim {
                 if (
                     this.shouldEndStateSR(
                         carsEW_SR > 0 ? carsNS_SR / carsEW_SR : this.state.prefs.ratio,
+                        carsNS_SR + carsEW_SR,
                         carsEW_SR,
                         carsEW_L,
                         this.pedRequestE || this.pedRequestW,
@@ -325,6 +327,7 @@ export class Sim {
      */
     private shouldEndStateSR(
         carRatio: number,
+        carsSRTotal: number,
         carsSR: number,
         carsL: number,
         pedRequest: boolean,
@@ -336,7 +339,8 @@ export class Sim {
 
         return (
             (this.timer >= min &&
-                (carRatio >= this.state.prefs.ratio ||
+                ((carsSRTotal <= this.state.prefs.ratioCarsLimit &&
+                    carRatio >= this.state.prefs.ratio) ||
                     (carsSR == 0 && carsL > 0) ||
                     (pedRequest && carsSR <= this.prefs.pedRequestMaxCars))) ||
             this.timer >= this.state.prefs.greenMax

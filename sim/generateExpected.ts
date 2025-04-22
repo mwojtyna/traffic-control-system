@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { Config, Input, SimRecording } from "./src/io.js";
+import { Config, ConfigSchema, Input, InputSchema, SimRecording } from "./src/io.js";
 import { Sim } from "./src/sim.js";
 
 const casesDir = path.resolve(import.meta.dirname, "testdata");
@@ -15,7 +15,7 @@ function saveJSON(filePath: string, data: any) {
 
 function generateExpected(testCaseDir: string, config: Config) {
     const inputPath = path.join(testCaseDir, "input.json");
-    const { commands }: Input = loadJSON(inputPath);
+    const { commands }: Input = InputSchema.parse(loadJSON(inputPath));
 
     const sim = new Sim(config);
 
@@ -41,8 +41,8 @@ const testDirs = fs
     .map((d) => path.join(casesDir, d))
     .filter((d) => fs.statSync(d).isDirectory());
 
+const configPath = path.join(casesDir, "config.json");
+const config: Config = ConfigSchema.parse(loadJSON(configPath));
 for (const dir of testDirs) {
-    const configPath = path.join(dir, "config.json");
-    const config: Config = loadJSON(configPath);
     generateExpected(dir, config);
 }

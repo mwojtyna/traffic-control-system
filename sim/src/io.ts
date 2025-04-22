@@ -6,15 +6,17 @@ import { LightState, Vehicle } from "./sim.js";
 const StateConfigSchema = z.object({
     /** Minimum number of steps before green ends */
     greenMin: z.number(),
-    /** Number of cars over which greenMin applies, otherwise greenMin = 0 */
+    /** Number of cars OVER which greenMin applies, otherwise greenMin = 0 */
     greenMinCarsThreshold: z.number(),
     /** Maximum number of steps before green ends */
     greenMax: z.number(),
     /** cars_stopped/cars_going */
     ratio: z.number(),
+    /** Total number of cars SR in both directions UNDER which ratio test applies */
+    ratioCarsLimit: z.number(),
 });
 const StateNameSchema = z.enum(["NS_SR", "NS_L", "EW_SR", "EW_L"]);
-const ConfigSchema = z.object({
+export const ConfigSchema = z.object({
     states: z
         .record(StateNameSchema, StateConfigSchema)
         .refine((obj): obj is Required<typeof obj> =>
@@ -43,7 +45,7 @@ const CommandSchema = z.union([
 ]);
 
 // Input
-const InputSchema = z.object({
+export const InputSchema = z.object({
     config: ConfigSchema.optional(),
     commands: z.array(CommandSchema),
 });

@@ -1,9 +1,0 @@
-{
-    "states": {
-        "NS_SR": { "greenMinCarsThreshold": 3, "greenMin": 1, "greenMax": 5, "ratio": 2 },
-        "NS_L": { "greenMinCarsThreshold": 3, "greenMin": 0, "greenMax": 3, "ratio": 2 },
-        "EW_SR": { "greenMinCarsThreshold": 3, "greenMin": 1, "greenMax": 5, "ratio": 2 },
-        "EW_L": { "greenMinCarsThreshold": 3, "greenMin": 0, "greenMax": 3, "ratio": 2 }
-    },
-    "pedRequestMaxCars": 4
-}
