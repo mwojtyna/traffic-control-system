@@ -39,7 +39,7 @@ const leftPercent_W = 26;
 export default function Display({ state }: ScreenProps) {
     return (
         <div
-            className="relative max-w-[98vh] min-w-[98vh] rounded-xs select-none"
+            className="relative max-w-[98vh] min-w-[98vh] overflow-clip rounded-xs select-none"
             onMouseDown={(e) => e.preventDefault()}
             onContextMenu={(e) => e.preventDefault()}
         >
