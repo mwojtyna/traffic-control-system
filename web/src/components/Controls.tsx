@@ -1,12 +1,10 @@
 import { StateSnapshot } from "@/types";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ControlsProps = {
     onFileChanged: (file: File) => void;
     onIndexChanged: (index: number) => void;
 
-    first: boolean;
-    last: boolean;
     disable: boolean;
     command: {
         type: StateSnapshot["type"];
@@ -15,8 +13,16 @@ type ControlsProps = {
     commandCount: number;
 };
 
-export default function Controls({ onFileChanged, ...props }: ControlsProps) {
+export default function Controls({
+    onFileChanged,
+    command,
+    commandCount,
+    onIndexChanged,
+    ...props
+}: ControlsProps) {
     const fileRef = useRef<HTMLInputElement>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
         const copy = fileRef.current!;
@@ -30,8 +36,27 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
         return () => copy.removeEventListener("input", handler);
     }, [onFileChanged]);
 
+    useEffect(() => {
+        if (isPlaying) {
+            intervalRef.current = setInterval(() => {
+                if (command && command.index < commandCount - 1) {
+                    onIndexChanged(command.index + 1);
+                } else {
+                    setIsPlaying(false); // Stop when we reach the end
+                }
+            }, 1000);
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [isPlaying, command, commandCount, onIndexChanged]);
+
     return (
-        <div className="mx-auto my-auto flex flex-col gap-6 text-lg">
+        <div className="mx-auto my-auto flex flex-col gap-10 text-lg">
             <div className="flex flex-col gap-1">
                 <label className="text-xl font-bold" htmlFor="file">
                     Read simulation state
@@ -54,29 +79,33 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
                             className="w-full"
                             type="range"
                             min={1}
-                            max={props.commandCount}
-                            value={props.command ? props.command.index + 1 : 0}
-                            onChange={(e) =>
-                                props.onIndexChanged(e.currentTarget.valueAsNumber - 1)
-                            }
+                            max={commandCount}
+                            value={command ? command.index + 1 : 0}
+                            onChange={(e) => onIndexChanged(e.currentTarget.valueAsNumber - 1)}
                         />
                         <pre className="font-bold">
-                            {props.command ? props.command.index + 1 : 0}/{props.commandCount}
+                            {command ? command.index + 1 : 0}/{commandCount}
                         </pre>
                     </div>
 
                     <div className="flex gap-2">
                         <ControlButton
-                            onClick={() => props.onIndexChanged(props.command!.index - 1)}
-                            disabled={props.first || props.disable}
+                            onClick={() => onIndexChanged(command!.index - 1)}
+                            disabled={command?.index === 0 || props.disable}
                         >
                             Previous
                         </ControlButton>
                         <ControlButton
-                            onClick={() => props.onIndexChanged(props.command!.index + 1)}
-                            disabled={props.last || props.disable}
+                            onClick={() => onIndexChanged(command!.index + 1)}
+                            disabled={command?.index === commandCount - 1 || props.disable}
                         >
                             Next
+                        </ControlButton>
+                        <ControlButton
+                            onClick={() => setIsPlaying((prev) => !prev)}
+                            disabled={command?.index === commandCount - 1 || props.disable}
+                        >
+                            {isPlaying ? "Pause" : "Play"}
                         </ControlButton>
                     </div>
                 </div>
@@ -85,7 +114,7 @@ export default function Controls({ onFileChanged, ...props }: ControlsProps) {
             <div className="flex flex-col gap-1">
                 <label className="text-xl font-bold">Command details</label>
                 <pre>
-                    <p>type: {props.command?.type ?? "N/A"}</p>
+                    <p>type: {command?.type ?? "N/A"}</p>
                 </pre>
             </div>
         </div>

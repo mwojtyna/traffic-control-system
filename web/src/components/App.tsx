@@ -63,8 +63,6 @@ export default function App() {
             <Controls
                 onFileChanged={onFileChanged}
                 onIndexChanged={(i) => setCurrentStateIndex(i)}
-                first={states.length > 0 && currentStateIndex == 0}
-                last={states.length > 0 && currentStateIndex == states.length - 1}
                 disable={states.length == 0}
                 command={
                     states[currentStateIndex]
