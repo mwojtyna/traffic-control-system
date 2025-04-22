@@ -102,8 +102,13 @@ export default function Controls({
                             Next
                         </ControlButton>
                         <ControlButton
-                            onClick={() => setIsPlaying((prev) => !prev)}
-                            disabled={command?.index === commandCount - 1 || props.disable}
+                            onClick={() => {
+                                if (command?.index === commandCount - 1) {
+                                    onIndexChanged(0);
+                                }
+                                setIsPlaying((prev) => !prev);
+                            }}
+                            disabled={props.disable}
                         >
                             {isPlaying ? "Pause" : "Play"}
                         </ControlButton>
