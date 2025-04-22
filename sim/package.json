@@ -8,12 +8,15 @@
         "start": "NODE_ENV=production node .",
         "dev": "NODE_ENV=development tsx ./src/main.ts",
         "lint": "tsc --noEmit",
-        "build": "tsc"
+        "build": "tsc",
+        "test": "vitest run",
+        "test:generate": "tsx generateExpected.ts"
     },
     "devDependencies": {
         "@types/node": "^22.14.1",
         "tsx": "^4.19.3",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "vitest": "^3.1.2"
     },
     "dependencies": {
         "zod": "^3.24.3"

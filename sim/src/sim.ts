@@ -246,7 +246,6 @@ export class Sim {
                         this.pedRequestN || this.pedRequestS,
                     )
                 ) {
-                    console.log(carsEW_SR / carsNS_SR);
                     changeState = true;
                 }
                 break;

@@ -1,0 +1,43 @@
+{
+    "commands": [
+        { "type": "addVehicle", "vehicleId": "n->s-1", "startRoad": "north", "endRoad": "south" },
+        { "type": "addVehicle", "vehicleId": "w->e-1", "startRoad": "west", "endRoad": "east" },
+        { "type": "pedestrianRequest", "crossing": "north" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "e->w-1", "startRoad": "east", "endRoad": "west" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "s->n-1", "startRoad": "south", "endRoad": "north" },
+        { "type": "pedestrianRequest", "crossing": "east" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "n->w-1", "startRoad": "north", "endRoad": "west" },
+        { "type": "addVehicle", "vehicleId": "w->n-1", "startRoad": "west", "endRoad": "north" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "e->s-1", "startRoad": "east", "endRoad": "south" },
+        { "type": "pedestrianRequest", "crossing": "south" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "s->e-1", "startRoad": "south", "endRoad": "east" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "w->e-2", "startRoad": "west", "endRoad": "east" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "e->n-1", "startRoad": "east", "endRoad": "north" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "n->e-1", "startRoad": "north", "endRoad": "east" },
+        { "type": "step" },
+
+        { "type": "addVehicle", "vehicleId": "s->w-1", "startRoad": "south", "endRoad": "west" },
+        { "type": "pedestrianRequest", "crossing": "west" },
+        { "type": "step" },
+
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" }
+    ]
+}
