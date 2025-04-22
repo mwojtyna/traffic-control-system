@@ -1,0 +1,60 @@
+name: Test sim
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-24.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4.2.2
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4.4.0
+              with:
+                  node-version: "lts/jod"
+
+            - name: Install dependencies in sim
+              working-directory: sim
+              run: npm install
+
+            - name: Build project in sim
+              working-directory: sim
+              run: npm run build
+
+            - name: Install dependencies in web
+              working-directory: web
+              run: npm install
+
+            - name: Build project in web
+              working-directory: web
+              run: npm run build
+
+    test:
+        name: Test
+        runs-on: ubuntu-24.04
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4.2.2
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4.4.0
+              with:
+                  node-version: "lts/jod"
+
+            - name: Install dependencies
+              working-directory: sim
+              run: npm ci
+
+            - name: Run tests
+              working-directory: sim
+              run: npm run test
