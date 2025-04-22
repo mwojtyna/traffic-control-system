@@ -4,29 +4,29 @@
             "greenMinCarsThreshold": 3,
             "greenMin": 1,
             "greenMax": 5,
-            "ratio": 2,
-            "ratioCarsLimit": 5
+            "ratio": 1.5,
+            "ratioCarsLimit": 6
         },
         "NS_L": {
             "greenMinCarsThreshold": 3,
             "greenMin": 0,
             "greenMax": 3,
-            "ratio": 2,
-            "ratioCarsLimit": 5
+            "ratio": 1.5,
+            "ratioCarsLimit": 6
         },
         "EW_SR": {
             "greenMinCarsThreshold": 3,
             "greenMin": 0,
             "greenMax": 3,
-            "ratio": 2,
-            "ratioCarsLimit": 5
+            "ratio": 1.5,
+            "ratioCarsLimit": 6
         },
         "EW_L": {
             "greenMinCarsThreshold": 3,
             "greenMin": 0,
             "greenMax": 3,
-            "ratio": 2,
-            "ratioCarsLimit": 5
+            "ratio": 1.5,
+            "ratioCarsLimit": 6
         }
     },
     "pedRequestMaxCars": 4
