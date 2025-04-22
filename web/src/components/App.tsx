@@ -57,7 +57,7 @@ export default function App() {
     }
 
     return (
-        <div className="m-2 flex w-full gap-12">
+        <div className="m-2 flex w-full gap-12 max-md:flex-col">
             <Display state={states[currentStateIndex] ?? initialState} />
 
             <Controls
