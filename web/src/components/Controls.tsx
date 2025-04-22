@@ -76,7 +76,7 @@ export default function Controls({
                 <div className="space-y-3">
                     <div className="flex w-full gap-3">
                         <input
-                            className="w-full"
+                            className="w-full accent-blue-500"
                             type="range"
                             min={1}
                             max={commandCount}
