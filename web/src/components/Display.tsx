@@ -10,6 +10,7 @@ import pedGreenImgPath from "@/../assets/ped_green.png?url";
 import pedRedImgPath from "@/../assets/ped_red.png?url";
 import pedRequestImgPath from "@/../assets/ped_request.png?url";
 import { StateSnapshot } from "@/types";
+import { useElementWidth } from "@/hooks";
 
 type Route = "north" | "south" | "west" | "east";
 type Light = "red" | "green";
@@ -159,8 +160,11 @@ type TrafficLightProps = {
 };
 
 function TrafficLights(props: TrafficLightProps) {
+    const { width: divWidth, ref } = useElementWidth<HTMLDivElement>();
+
     return (
         <div
+            ref={ref}
             className="absolute"
             style={{
                 top: props.topPercent + "%",
@@ -168,7 +172,12 @@ function TrafficLights(props: TrafficLightProps) {
                 width: "20%",
             }}
         >
-            <p className="text-center text-2xl font-bold text-white">{props.label}</p>
+            <p
+                className="text-center text-2xl font-bold text-white"
+                style={{ fontSize: divWidth * 0.12 }}
+            >
+                {props.label}
+            </p>
             <div className="grid grid-flow-col gap-1">
                 {props.pedestrianRequest && (
                     <img
@@ -201,9 +210,12 @@ type CarImgProps = {
 };
 
 function CarImg(props: CarImgProps) {
+    const { width: divWidth, ref } = useElementWidth<HTMLDivElement>();
+
     return (
         <div
-            className="absolute w-[7.5%]"
+            ref={ref}
+            className="absolute z-[1] w-[7.5%]"
             title={props.car.id}
             style={{
                 top: props.topPercent + "%",
@@ -212,8 +224,8 @@ function CarImg(props: CarImgProps) {
             }}
         >
             <p
-                className="absolute top-[7%] left-[30%] z-10 text-center font-mono text-lg font-bold text-white"
-                style={{ rotate: -props.rotation + "deg", fontSize: "1.5rem" }}
+                className="absolute top-[7%] left-[30%] text-center font-mono font-bold text-white"
+                style={{ rotate: -props.rotation + "deg", fontSize: divWidth * 0.3 }}
             >
                 {props.car.endRoad.at(0)!.toUpperCase()}
             </p>
