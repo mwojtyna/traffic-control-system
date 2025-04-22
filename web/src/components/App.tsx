@@ -3,7 +3,7 @@ import Controls from "./Controls";
 import Display from "./Display";
 import { useState } from "react";
 
-const defaultState: StateSnapshot = {
+const initialState: StateSnapshot = {
     type: "addVehicle",
     data: {
         lights: {
@@ -38,7 +38,7 @@ const defaultState: StateSnapshot = {
 };
 
 export default function App() {
-    const [states, setStates] = useState<StateSnapshot[]>([defaultState]);
+    const [states, setStates] = useState<StateSnapshot[]>([]);
     const [currentStateIndex, setCurrentStateIndex] = useState(0);
 
     async function onFileChanged(file: File) {
@@ -58,13 +58,13 @@ export default function App() {
 
     return (
         <div className="m-2 flex w-full gap-12">
-            <Display state={states[currentStateIndex]} />
+            <Display state={states[currentStateIndex] ?? initialState} />
 
             <Controls
                 onFileChanged={onFileChanged}
                 onIndexChanged={(i) => setCurrentStateIndex(i)}
                 disable={states.length == 0}
-                command={
+                state={
                     states[currentStateIndex]
                         ? {
                               type: states[currentStateIndex].type,
@@ -72,7 +72,7 @@ export default function App() {
                           }
                         : null
                 }
-                commandCount={states.length}
+                stateCount={states.length}
             />
         </div>
     );

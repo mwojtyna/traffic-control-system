@@ -6,17 +6,14 @@ type ControlsProps = {
     onIndexChanged: (index: number) => void;
 
     disable: boolean;
-    command: {
-        type: StateSnapshot["type"];
-        index: number;
-    } | null;
-    commandCount: number;
+    state: { index: number; type: StateSnapshot["type"] } | null;
+    stateCount: number;
 };
 
 export default function Controls({
     onFileChanged,
-    command,
-    commandCount,
+    state,
+    stateCount,
     onIndexChanged,
     ...props
 }: ControlsProps) {
@@ -39,8 +36,8 @@ export default function Controls({
     useEffect(() => {
         if (isPlaying) {
             intervalRef.current = setInterval(() => {
-                if (command && command.index < commandCount - 1) {
-                    onIndexChanged(command.index + 1);
+                if (state && state.index < stateCount - 1) {
+                    onIndexChanged(state.index + 1);
                 } else {
                     setIsPlaying(false); // Stop when we reach the end
                 }
@@ -53,7 +50,7 @@ export default function Controls({
                 intervalRef.current = null;
             }
         };
-    }, [isPlaying, command, commandCount, onIndexChanged]);
+    }, [isPlaying, state, stateCount, onIndexChanged]);
 
     return (
         <div className="mx-auto my-auto flex flex-col gap-10 text-lg">
@@ -79,31 +76,31 @@ export default function Controls({
                             className="w-full accent-blue-500"
                             type="range"
                             min={1}
-                            max={commandCount}
-                            value={command ? command.index + 1 : 0}
+                            max={stateCount}
+                            value={state ? state.index + 1 : 0}
                             onChange={(e) => onIndexChanged(e.currentTarget.valueAsNumber - 1)}
                         />
                         <pre className="font-bold">
-                            {command ? command.index + 1 : 0}/{commandCount}
+                            {state ? state.index + 1 : 0}/{stateCount}
                         </pre>
                     </div>
 
                     <div className="flex gap-2">
                         <ControlButton
-                            onClick={() => onIndexChanged(command!.index - 1)}
-                            disabled={command?.index === 0 || props.disable}
+                            onClick={() => onIndexChanged(state!.index - 1)}
+                            disabled={state?.index === 0 || props.disable}
                         >
                             Previous
                         </ControlButton>
                         <ControlButton
-                            onClick={() => onIndexChanged(command!.index + 1)}
-                            disabled={command?.index === commandCount - 1 || props.disable}
+                            onClick={() => onIndexChanged(state!.index + 1)}
+                            disabled={state?.index === stateCount - 1 || props.disable}
                         >
                             Next
                         </ControlButton>
                         <ControlButton
                             onClick={() => {
-                                if (command?.index === commandCount - 1) {
+                                if (state!.index === stateCount - 1) {
                                     onIndexChanged(0);
                                 }
                                 setIsPlaying((prev) => !prev);
@@ -119,7 +116,7 @@ export default function Controls({
             <div className="flex flex-col gap-1">
                 <label className="text-xl font-bold">Command details</label>
                 <pre>
-                    <p>type: {command?.type ?? "N/A"}</p>
+                    <p>type: {state?.type ?? "N/A"}</p>
                 </pre>
             </div>
         </div>
