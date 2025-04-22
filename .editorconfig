@@ -7,10 +7,3 @@ indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
 charset = utf-8
-
-[*.{md,yml,yaml}]
-indent_style = space
-
-[*.{yml,yaml}]
-indent_size = 2
-
