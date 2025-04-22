@@ -330,8 +330,13 @@ export class Sim {
         carsL: number,
         pedRequest: boolean,
     ): boolean {
+        let min = this.state.prefs.greenMin;
+        if (carsSR <= this.state.prefs.greenMinCarsThreshold) {
+            min = 0;
+        }
+
         return (
-            (this.timer >= this.state.prefs.greenMin &&
+            (this.timer >= min &&
                 (carRatio >= this.state.prefs.ratio ||
                     (carsSR == 0 && carsL > 0) ||
                     (pedRequest && carsSR <= this.prefs.pedRequestMaxCars))) ||

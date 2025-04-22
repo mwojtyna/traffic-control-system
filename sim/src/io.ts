@@ -6,6 +6,8 @@ import { LightState, Vehicle } from "./sim.js";
 const StateConfigSchema = z.object({
     /** Minimum number of steps before green ends */
     greenMin: z.number(),
+    /** Number of cars over which greenMin applies, otherwise greenMin = 0 */
+    greenMinCarsThreshold: z.number(),
     /** Maximum number of steps before green ends */
     greenMax: z.number(),
     /** cars_stopped/cars_going */
@@ -18,7 +20,7 @@ const ConfigSchema = z.object({
         .refine((obj): obj is Required<typeof obj> =>
             StateNameSchema.options.every((key) => obj[key] != null),
         ),
-    /** Max number of cars when ped request switches cycle faster */
+    /** Max number of cars in both directions (e.g. NS) when ped request switches cycle faster */
     pedRequestMaxCars: z.number(),
 });
 
