@@ -18,6 +18,8 @@ const ConfigSchema = z.object({
         .refine((obj): obj is Required<typeof obj> =>
             StateNameSchema.options.every((key) => obj[key] != null),
         ),
+    /** Max number of cars when ped request switches cycle faster */
+    pedRequestMaxCars: z.number(),
 });
 
 // Command

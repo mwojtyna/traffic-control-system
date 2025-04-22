@@ -54,6 +54,11 @@ export class Sim {
     private pedRequestE = false;
     private pedRequestW = false;
 
+    private readonly prefs: {
+        /** Max number of cars when ped request switches cycle faster */
+        pedRequestMaxCars: number;
+    };
+
     constructor(config: Config) {
         this.states = [
             {
@@ -94,6 +99,7 @@ export class Sim {
             },
         ];
         this.state = this.states[0];
+        this.prefs = { pedRequestMaxCars: config.pedRequestMaxCars };
     }
 
     addVehicle(v: Vehicle, startRoad: Direction): void {
@@ -161,14 +167,6 @@ export class Sim {
      * @returns Vehicles that left the intersection during this step
      */
     step(): Vehicle[] {
-        log("STEP:");
-        log("state", this.state);
-        log("timer", this.timer);
-        log("pedRequestN", this.pedRequestN);
-        log("pedRequestS", this.pedRequestS);
-        log("pedRequestE", this.pedRequestE);
-        log("pedRequestW", this.pedRequestW);
-
         const leftVehicles: Vehicle[] = [];
 
         // Dequeue vehicles NS
@@ -248,6 +246,7 @@ export class Sim {
                         this.pedRequestN || this.pedRequestS,
                     )
                 ) {
+                    console.log(carsEW_SR / carsNS_SR);
                     changeState = true;
                 }
                 break;
@@ -333,7 +332,9 @@ export class Sim {
     ): boolean {
         return (
             (this.timer >= this.state.prefs.greenMin &&
-                (carRatio >= this.state.prefs.ratio || (carsSR == 0 && carsL > 0) || pedRequest)) ||
+                (carRatio >= this.state.prefs.ratio ||
+                    (carsSR == 0 && carsL > 0) ||
+                    (pedRequest && carsSR <= this.prefs.pedRequestMaxCars))) ||
             this.timer >= this.state.prefs.greenMax
         );
     }

@@ -30,6 +30,7 @@ const defaultConfig: Config = {
         EW_SR: { greenMin: 1, greenMax: 5, ratio: 4 / 2 },
         EW_L: { greenMin: 0, greenMax: 3, ratio: 4 / 2 },
     },
+    pedRequestMaxCars: 4,
 };
 const sim = new Sim(input.config ?? defaultConfig);
 
