@@ -142,12 +142,12 @@ stateDiagram-v2
 - `l` - w lewo
 - `cond` - warunkowo w prawo ("strzałka")
 - `ped` - piesi (tutaj zielone dla np. kierunku `NS` oznacza, że piesi mogą przejść po stronie `N` oraz `S` skrzyżowania)
-- `t_sr` - zmienia stan gdy:
+- `t_l` - zmienia stan gdy:
     - upłynął minimalny czas trwania światła zielonego **ORAZ**
         - (liczba wszystkich pojazdów jadących na pasach `sr` we wszystkich kierunkach <= `ratioCarsLimit` **ORAZ** stosunek pojazdów stojących na czerwonym do pojazdów jadących >= `ratio`)
         - **LUB** (liczba pojazdów na pasie `sr` w obecnym kierunku == 0 **ORAZ** liczba pojazdów na pasie `l` > 0)
         - **LUB** (pieszy nacisnął przycisk **ORAZ** ilość pojazdów na pasie `sr` w obecnym kierunku <= `pedRequestMaxCars`)
     - **LUB** upłynął maksymalny czas trwania światła zielonego
-- `t_l` - zmienia stan gdy:
+- `t_sr` - zmienia stan gdy:
     - (upłynął minimalny czas trwania światła zielonego **ORAZ** ilość pojazdów na pasach `l` w obecnym kierunku == 0)
     - **LUB** (upłynął maksymalny czas trwania światła zielonego)
