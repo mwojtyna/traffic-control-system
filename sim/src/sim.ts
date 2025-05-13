@@ -1,6 +1,8 @@
 import { Config, Direction, StateConfig, StateName, StateSnapshot } from "./io.js";
 import { log } from "./log.js";
+import { Metrics } from "./metrics.js";
 import { Queue } from "./queue.js";
+import { Strategy } from "./strategy.js";
 
 export type Vehicle = {
     id: string;
@@ -19,7 +21,7 @@ export type LightState = {
     cond: Light;
 };
 
-type State = {
+export type State = {
     /** For checking if state changed, must be unique */
     name: StateName;
     prefs: StateConfig;
@@ -32,9 +34,15 @@ type State = {
     nextStateIndex: number;
 };
 
+export type Prefs = {
+    /** Max number of cars when ped request switches cycle faster */
+    pedRequestMaxCars: number;
+};
+
 export class Sim {
     private state: State;
     private readonly states: State[];
+    private metrics: Metrics | null;
 
     /** Steps elapsed including current from the most recent light change */
     private timer = 0;
@@ -54,12 +62,10 @@ export class Sim {
     private pedRequestE = false;
     private pedRequestW = false;
 
-    private readonly prefs: {
-        /** Max number of cars when ped request switches cycle faster */
-        pedRequestMaxCars: number;
-    };
+    private readonly prefs: Prefs;
+    private readonly strategy: Strategy;
 
-    constructor(config: Config) {
+    constructor(config: Config, strategy: Strategy) {
         this.states = [
             {
                 name: "NS_SR",
@@ -100,6 +106,8 @@ export class Sim {
         ];
         this.state = this.states[0];
         this.prefs = { pedRequestMaxCars: config.pedRequestMaxCars };
+        this.metrics = config.metrics ? new Metrics() : null;
+        this.strategy = strategy;
     }
 
     addVehicle(v: Vehicle, startRoad: Direction): void {
@@ -235,49 +243,21 @@ export class Sim {
         const carsEW_L = this.eastL.getCount() + this.westL.getCount();
 
         // State transitions
-        let changeState = false;
-        switch (this.state.name) {
-            case "NS_SR":
-                if (
-                    this.shouldEndStateSR(
-                        carsNS_SR > 0 ? carsEW_SR / carsNS_SR : Infinity,
-                        carsNS_SR + carsEW_SR,
-                        carsNS_SR,
-                        carsNS_L,
-                        this.pedRequestN || this.pedRequestS,
-                    )
-                ) {
-                    changeState = true;
-                }
-                break;
-            case "NS_L":
-                if (this.shouldEndStateL(carsNS_L)) {
-                    changeState = true;
-                }
-                break;
-            case "EW_SR":
-                if (
-                    this.shouldEndStateSR(
-                        carsEW_SR > 0 ? carsNS_SR / carsEW_SR : Infinity,
-                        carsNS_SR + carsEW_SR,
-                        carsEW_SR,
-                        carsEW_L,
-                        this.pedRequestE || this.pedRequestW,
-                    )
-                ) {
-                    changeState = true;
-                }
-                break;
-            case "EW_L":
-                if (this.shouldEndStateL(carsEW_L)) {
-                    changeState = true;
-                }
-                break;
-        }
-
-        if (changeState) {
-            this.state = this.states[this.state.nextStateIndex];
+        const result = this.strategy.execute(
+            this.state,
+            this.prefs,
+            carsNS_SR,
+            carsNS_L,
+            carsEW_SR,
+            carsEW_L,
+            this.pedRequestN,
+            this.pedRequestS,
+            this.timer,
+        );
+        if (result.changeState) {
+            this.state = this.states[result.nextStateIndex];
             this.timer = 0;
+            this.metrics?.endCycle();
 
             // Reset pedestrian requests when lights change
             switch (this.state.name) {
@@ -292,6 +272,29 @@ export class Sim {
             }
         } else {
             this.timer++;
+        }
+
+        if (this.metrics) {
+            this.metrics.addCarPerStep(leftVehicles.length);
+            switch (this.state.name) {
+                case "NS_SR": {
+                    const waiting =
+                        this.northL.getCount() +
+                        this.southL.getCount() +
+                        this.eastSR.getCount() +
+                        this.westSR.getCount() +
+                        this.eastL.getCount() +
+                        this.westL.getCount();
+                    this.metrics.addCarsWaiting(waiting);
+
+                    const went = this.northSR.getCount();
+                    this.metrics.addCarPerCycle(went);
+                    break;
+                }
+                case "NS_L":
+                case "EW_SR":
+                case "EW_L":
+            }
         }
 
         log("leftVehicles", leftVehicles, "\n");
@@ -320,37 +323,5 @@ export class Sim {
             pedestrianRequestE: this.pedRequestE,
             pedestrianRequestW: this.pedRequestW,
         };
-    }
-
-    /**
-     * @param carRatio - cars_stopped/cars_going
-     */
-    private shouldEndStateSR(
-        carRatio: number,
-        carsSRTotal: number,
-        carsSR: number,
-        carsL: number,
-        pedRequest: boolean,
-    ): boolean {
-        let min = this.state.prefs.greenMin;
-        if (carsSR <= this.state.prefs.greenMinCarsThreshold) {
-            min = 0;
-        }
-
-        return (
-            (this.timer >= min &&
-                ((carsSRTotal <= this.state.prefs.ratioCarsLimit &&
-                    carRatio >= this.state.prefs.ratio) ||
-                    (carsSR == 0 && carsL > 0) ||
-                    (pedRequest && carsSR <= this.prefs.pedRequestMaxCars))) ||
-            this.timer >= this.state.prefs.greenMax
-        );
-    }
-
-    private shouldEndStateL(carsAmount: number): boolean {
-        return (
-            (this.timer >= this.state.prefs.greenMin && carsAmount == 0) ||
-            this.timer >= this.state.prefs.greenMax
-        );
     }
 }

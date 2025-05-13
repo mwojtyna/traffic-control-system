@@ -2,6 +2,7 @@ import { exit } from "node:process";
 import { Config, Input, Output, readInput, SimRecording, writeOutput } from "./io.js";
 import { Sim } from "./sim.js";
 import { fatal, log } from "./log.js";
+import { MyStrategy } from "./strategy.js";
 
 // 4 because 1st is node, 2nd is index.ts
 if (process.argv.length < 4) {
@@ -55,8 +56,9 @@ const defaultConfig: Config = {
         },
     },
     pedRequestMaxCars: 4,
+    metrics: true,
 };
-const sim = new Sim(input.config ?? defaultConfig);
+const sim = new Sim(input.config ?? defaultConfig, new MyStrategy());
 
 const output: Output = { stepStatuses: [] };
 const recording: SimRecording = { commands: [] };
