@@ -24,7 +24,6 @@ export const ConfigSchema = z.object({
         ),
     /** Max number of cars in both directions (e.g. NS) when ped request switches cycle faster */
     pedRequestMaxCars: z.number(),
-    metrics: z.boolean(),
 });
 
 // Command
